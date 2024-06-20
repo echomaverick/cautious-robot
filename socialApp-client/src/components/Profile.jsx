@@ -4,7 +4,7 @@ import "../styles/profile.css";
 import ProfileHeader from "./ProfileHeader";
 import TabsSection from "./TabsSection";
 import StoryHighlights from "./StoryHighlights";
-import { PROFILE_DATA } from "/home/samuel/Downloads/socialApp-client/data.js";
+import { PROFILE_DATA } from "/home/samuel/Documents/GitHub/cautious-robot/socialApp-client/data.js";
 import { createContext } from "react";
 import { Container } from "react-bootstrap";
 
