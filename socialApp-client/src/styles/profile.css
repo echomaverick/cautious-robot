@@ -1,0 +1,14 @@
+.profile-layout {
+  display: flex;
+  justify-content: space-evenly;
+  margin-left: 40px;
+  width: auto;
+}
+
+.menu {
+  flex: 0 0 160px;
+}
+
+.main-content {
+  border: none;
+}

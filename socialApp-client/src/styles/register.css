@@ -1,0 +1,92 @@
+* {
+  box-sizing: border-box;
+}
+.container-sign {
+  padding: 16px;
+  color: black;
+  margin-top: 150px;
+  border: 0.5px solid lightgray;
+  margin-right: 10px;
+}
+.regTitle {
+  color: black;
+}
+.fill {
+  text-align: center;
+}
+
+input[type="text"],
+input[type="password"] {
+  width: 100%;
+  padding: 15px;
+  margin: 5px 0 22px 0;
+  display: inline-block;
+  border: none;
+  background: #f1f1f1;
+  border-radius: 20px;
+}
+
+input[type="text"]:focus,
+input[type="password"]:focus {
+  background-color: #ddd;
+  outline: none;
+}
+
+hr {
+  border: 1px solid #f1f1f1;
+  margin-bottom: 25px;
+}
+
+a {
+  color: dodgerblue;
+}
+
+.signin {
+  text-align: center;
+}
+.screen {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  height: 75vh;
+  gap: 50px;
+}
+img.hello-image {
+  width: 530px;
+  margin-top: 130px;
+}
+@media (max-width: 768px) {
+  .screen {
+    flex-direction: column;
+    height: auto;
+    text-align: center;
+  }
+
+  img.hello-image {
+    width: 80%;
+    margin-top: 30px;
+  }
+
+  .container-sign {
+    margin-top: 10px;
+  }
+}
+
+@media (max-width: 1024px) {
+  .screen {
+    flex-direction: column;
+    height: auto; 
+    text-align: center; 
+  }
+
+  img.hello-image {
+    width: 70%; 
+    margin-top: 20px; 
+  }
+
+  .container-sign {
+    margin-top: 20px;
+    margin-left: 10px;
+  }
+}
