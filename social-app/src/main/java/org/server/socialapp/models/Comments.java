@@ -11,13 +11,13 @@ public class Comments {
 
 	@Id
 	private String id;
-	private String username;
+	private String userId;
 	private String content;
 	private LocalDateTime commentDate;
 
-	public Comments(String username , String content) {
+	public Comments(String userId , String content) {
 		this.id = UUID.randomUUID().toString();
-		this.username = username;
+		this.userId = userId;
 		this.content = content;
 		this.commentDate = LocalDateTime.now();
 	}
@@ -30,12 +30,12 @@ public class Comments {
 		this.id = id;
 	}
 
-	public String getUsername() {
-		return username;
+	public String getUserId() {
+		return userId;
 	}
 
-	public void setUsername(String username) {
-		this.username = username;
+	public void setUserId(String userId) {
+		this.userId = userId;
 	}
 
 	public String getContent() {

@@ -3,10 +3,7 @@ package org.server.socialapp.controllers;
 import org.server.socialapp.models.User;
 import org.server.socialapp.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/users")
@@ -19,5 +16,11 @@ public class UserController {
 	public User register(@RequestBody User user) {
 		System.out.println("User registering: " + user.getUsername());
 		return userService.createUser(user);
+	}
+
+	@GetMapping("/info/{username}")
+	public User getUserInfo(@PathVariable String username) {
+		System.out.println("User getting information: " + username);
+		return userService.getUserInfo(username);
 	}
 }

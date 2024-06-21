@@ -1,62 +1,77 @@
 package org.server.socialapp.services;
 
-import org.server.socialapp.models.User;
-import org.server.socialapp.repositories.UserRepository;
+import org.server.socialapp.models.FollowerDTO;
+import org.server.socialapp.repositories.FollowRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class FollowService {
 
-    private static final Logger logger = LoggerFactory.getLogger(FollowService.class);
+	private static final Logger logger = LoggerFactory.getLogger(FollowService.class);
 
-    @Autowired
-    private UserRepository userRepository;
+	@Autowired
+	private FollowRepository followRepository;
 
-    public void followUser(String followerId, String followingId) {
-        logger.info("Attempting to follow: {} by {}", followingId, followerId);
+	public void followUser(String followerId , String followingId) {
+		logger.info("Attempting to follow: {} by {}" , followingId , followerId);
 
-        User follower = userRepository.findById(followerId).orElseThrow(() ->
-                new IllegalArgumentException("Invalid follower ID provided: " + followerId));
-        User following = userRepository.findById(followingId).orElseThrow(() ->
-                new IllegalArgumentException("Invalid following ID provided: " + followingId));
+		FollowerDTO followerDTO = followRepository.findByUserId(followerId);
+		if (followerDTO == null) {
+			followerDTO = new FollowerDTO(followerId);
+		}
 
-        if (follower.getFollowing().contains(following)) {
-            logger.warn("{} is already following {}", follower.getUsername(), following.getUsername());
-            return;
-        }
+		List<String> followingIds = followerDTO.getFollowingId();
+		if (!followingIds.contains(followingId)) {
+			followingIds.add(followingId);
+			followRepository.save(followerDTO);
+			logger.info("{} started following {}" , followerId , followingId);
+		} else {
+			logger.warn("{} is already following {}" , followerId , followingId);
+		}
 
-        follower.getFollowing().add(following);
-        userRepository.save(follower);
-        logger.info("{} started following {}", follower.getUsername(), following.getUsername());
+		FollowerDTO followingDTO = followRepository.findByUserId(followingId);
+		if (followingDTO == null) {
+			followingDTO = new FollowerDTO(followingId);
+		}
 
-        if (!following.getFollowers().contains(follower)) {
-            following.getFollowers().add(follower);
-            userRepository.save(following);
-            logger.info("{} followed by {}", following.getUsername(), follower.getUsername());
-        }
+		List<String> followerIds = followingDTO.getFollowerId();
+		if (!followerIds.contains(followerId)) {
+			followerIds.add(followerId);
+			followRepository.save(followingDTO);
+			logger.info("{} followed by {}" , followingId , followerId);
+		}
+	}
+
+	public void unfollowUser(String followerId , String followingId) {
+		logger.info("Attempting to unfollow: {} by {}" , followingId , followerId);
+
+		FollowerDTO followerDTO = followRepository.findByUserId(followerId);
+		if (followerDTO != null) {
+			List<String> followingIds = followerDTO.getFollowingId();
+			if (followingIds.contains(followingId)) {
+				followingIds.remove(followingId);
+				followRepository.save(followerDTO);
+				logger.info("{} unfollowed {}" , followerId , followingId);
+			}
+		}
+
+		FollowerDTO followingDTO = followRepository.findByUserId(followingId);
+		if (followingDTO != null) {
+			List<String> followerIds = followingDTO.getFollowerId();
+			if (followerIds.contains(followerId)) {
+				followerIds.remove(followerId);
+				followRepository.save(followingDTO);
+				logger.info("{} removed from followers of {}" , followerId , followingId);
+			}
+		}
+	}
+	 public FollowerDTO getUserConnections(String userId) {
+        return followRepository.findByUserId(userId);
     }
 
-    public void unfollowUser(String followerId, String followingId) {
-        logger.info("Attempting to unfollow: {} by {}", followingId, followerId);
-
-        User follower = userRepository.findById(followerId).orElseThrow(() ->
-                new IllegalArgumentException("Invalid follower ID provided: " + followerId));
-        User following = userRepository.findById(followingId).orElseThrow(() ->
-                new IllegalArgumentException("Invalid following ID provided: " + followingId));
-
-        if (follower.getFollowing().contains(following)) {
-            follower.getFollowing().remove(following);
-            userRepository.save(follower);
-            logger.info("{} unfollowed {}", follower.getUsername(), following.getUsername());
-        }
-
-        if (following.getFollowers().contains(follower)) {
-            following.getFollowers().remove(follower);
-            userRepository.save(following);
-            logger.info("{} removed from followers of {}", follower.getUsername(), following.getUsername());
-        }
-    }
 }

@@ -17,4 +17,9 @@ public class PostController {
 		System.out.println("Post creating for username: " + username);
 		return postService.createPost(username , post);
 	}
+
+	@GetMapping("/list/{userId}")
+	public Post listUserPosts(@PathVariable String userId) {
+		return postService.getUserPosts(userId);
+	}
 }

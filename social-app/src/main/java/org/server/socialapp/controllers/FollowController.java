@@ -1,5 +1,6 @@
 package org.server.socialapp.controllers;
 
+import org.server.socialapp.models.FollowerDTO;
 import org.server.socialapp.services.FollowService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -8,16 +9,21 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/users")
 public class FollowController {
 
-    @Autowired
-    private FollowService followService;
+	@Autowired
+	private FollowService followService;
 
-    @PostMapping("/follow/{followerId}/follow/{followingId}")
-    public void followUser(@PathVariable String followerId, @PathVariable String followingId) {
-        followService.followUser(followerId, followingId);
-    }
+	@PostMapping("/follow/{followerId}/follow/{followingId}")
+	public void followUser(@PathVariable String followerId , @PathVariable String followingId) {
+		followService.followUser(followerId , followingId);
+	}
 
-    @DeleteMapping("/unfollow/{followerId}/unfollow/{followingId}")
-    public void unfollowUser(@PathVariable String followerId, @PathVariable String followingId) {
-        followService.unfollowUser(followerId, followingId);
-    }
+	@DeleteMapping("/unfollow/{followerId}/unfollow/{followingId}")
+	public void unfollowUser(@PathVariable String followerId , @PathVariable String followingId) {
+		followService.unfollowUser(followerId , followingId);
+	}
+
+	@GetMapping("/list/{userId}")
+	public FollowerDTO getUserConnections(@PathVariable String userId) {
+		return followService.getUserConnections(userId);
+	}
 }

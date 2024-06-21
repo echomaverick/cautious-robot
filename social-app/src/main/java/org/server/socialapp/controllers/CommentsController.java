@@ -12,9 +12,9 @@ public class CommentsController {
 	@Autowired
 	private CommentsService commentsService;
 
-	@PostMapping("/create/{username}/{postId}")
-	public Comments create(@PathVariable String username , @PathVariable String postId , @RequestBody Comments comments) {
-		System.out.println("Comments created for postId: " + postId + " by user: " + username);
-		return commentsService.createComment(username , postId , comments);
+	@PostMapping("/create/{userId}/{postId}")
+	public Comments create(@PathVariable String userId , @PathVariable String postId , @RequestBody Comments comments) {
+		System.out.println("Comments created for postId: " + postId + " by user: " + userId);
+		return commentsService.createComment(userId , postId , comments);
 	}
 }

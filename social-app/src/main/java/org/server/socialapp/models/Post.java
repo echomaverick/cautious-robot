@@ -13,6 +13,7 @@ public class Post {
 	@Id
 	private String id;
 	private String title;
+	private String userId;
 	private String content;
 	private List<Comments> commentsList = new ArrayList<>();
 	private String username;
@@ -22,6 +23,14 @@ public class Post {
 		this.title = title;
 		this.content = content;
 		this.username = username;
+		this.userId = userId;
+	}
+
+	public String getUserId() {
+		return userId;
+	}
+	public void setUserId(String userId) {
+		this.userId = userId;
 	}
 
 	public String getId() {

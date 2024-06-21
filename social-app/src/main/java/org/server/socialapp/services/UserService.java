@@ -46,6 +46,10 @@ public class UserService {
 		return userRepository.save(user);
 	}
 
+	public User getUserInfo(String username){
+		return userRepository.findByUsername(username);
+	}
+
 	private boolean isValidEmail(String email) {
 		String emailRegex = "^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$";
 		return Pattern.matches(emailRegex , email);

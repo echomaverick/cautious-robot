@@ -1,8 +1,6 @@
 package org.server.socialapp.models;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.ArrayList;
@@ -20,27 +18,22 @@ public class User {
 	private String surname;
 	private String email;
 	private List<String> links = new ArrayList<>();
-	@DBRef
-	private List<User> followers = new ArrayList<>();
-	@DBRef
-	private List<User> following = new ArrayList<>();
 	private String bio;
 	private String title;
 	private String role = "simple_account";
-	private List<Post> posts = new ArrayList<>();
 
 	@Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        User user = (User) o;
-        return Objects.equals(id, user.id);
-    }
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		User user = (User) o;
+		return Objects.equals(id , user.id);
+	}
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(id);
-    }
+	@Override
+	public int hashCode() {
+		return Objects.hash(id);
+	}
 
 	public String getId() {
 		return id;
@@ -88,30 +81,6 @@ public class User {
 
 	public void setEmail(String email) {
 		this.email = email;
-	}
-
-	public List<Post> getPosts() {
-		return posts;
-	}
-
-	public void setPosts(List<Post> posts) {
-		this.posts = posts;
-	}
-
-	public List<User> getFollowers() {
-		return followers;
-	}
-
-	public void setFollowers(List<User> followers) {
-		this.followers = followers;
-	}
-
-	public List<User> getFollowing() {
-		return following;
-	}
-
-	public void setFollowing(List<User> following) {
-		this.following = following;
 	}
 
 	public String getBio() {

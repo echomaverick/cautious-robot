@@ -2,6 +2,7 @@ package org.server.socialapp.services;
 
 import org.server.socialapp.models.Post;
 import org.server.socialapp.models.User;
+import org.server.socialapp.repositories.PostRepository;
 import org.server.socialapp.repositories.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,17 +16,22 @@ public class PostService {
 
 	@Autowired
 	private UserRepository userRepository;
+	@Autowired
+	private PostRepository postRepository;
 
 	public Post createPost(String username , Post post) {
 		User user = userRepository.findByUsername(username);
 		if (user == null) {
 			throw new IllegalArgumentException("User not found");
 		}
-		user.getPosts().add(post);
+		post.setUserId(user.getId());
 
-		userRepository.save(user);
+		Post savedPost = postRepository.save(post);
 
-		logger.info("Post created with ID: {}" , post.getId());
+		logger.info("Post created with ID: {}" , savedPost);
 		return post;
+	}
+	public Post getUserPosts(String postId) {
+		return postRepository.findByUserId(postId);
 	}
 }
