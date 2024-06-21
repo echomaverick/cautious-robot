@@ -7,8 +7,15 @@ import { CiSaveDown1 } from "react-icons/ci";
 import { AiOutlineMessage } from "react-icons/ai";
 import { TbPremiumRights } from "react-icons/tb";
 import Button from "react-bootstrap/Button";
+import { useNavigate } from "react-router-dom";
 
 const ChatHistory = () => {
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    navigate('/login');
+  };
   return (
     <div className="history-div">
       <div>
@@ -48,10 +55,28 @@ const ChatHistory = () => {
           backgroundColor: "white",
           border: "none",
           color: "black",
+          fontSize: 22
         }}
         href="/settings"
       >
         Settings
+      </Button>
+      <Button
+        style={{
+          padding: 10,
+          borderRadius: 20,
+          position: "fixed",
+          bottom: 10,
+          transform: "translateX(-50%)",
+          zIndex: "1000",
+          width: "150px",
+          backgroundColor: "white",
+          border: "none",
+          color: "black",
+        }}
+        onClick={handleLogout} 
+      >
+        Logout
       </Button>
     </div>
   );
