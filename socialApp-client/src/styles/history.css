@@ -9,20 +9,93 @@
   top: 0;
   left: 0;
   z-index: 1000;
+  overflow-y: auto;
+  transition: width 0.3s ease;
 }
+
 .history-links {
   display: flex;
   flex-direction: column;
-  margin-top: 150px;
+  margin-top: 80px;
   gap: 50px;
   font-size: 20px;
+  margin-left: 40px;
 }
 
 .history-links a {
-  display: block;
+  display: flex;
+  align-items: center;
   padding: 12px 0;
   margin-bottom: 10px;
   color: black;
   text-decoration: none;
   transition: all 0.3s ease;
+}
+
+.history-links a .icon {
+  margin-right: 10px;
+}
+
+.settings {
+  padding: 10;
+  border-radius: 20px;
+  position: fixed;
+  transform: translateX(-50%);
+  border: none;
+  color: black;
+  font-size: 22px;
+  width: 150px;
+  background-color: white;
+}
+
+.logout {
+  padding: 10;
+  border-radius: 20px;
+  position: fixed;
+  bottom: 50px;
+  transform: translateX(-50%);
+  border: none;
+  font-size: 22px;
+  color: black;
+  background-color: white;
+  width: 150px;
+}
+
+.settings:hover,
+.logout:hover {
+  background-color: white;
+  color: black;
+}
+
+@media (max-width: 768px) {
+  .history-div {
+    width: 50px;
+  }
+
+  .history-links a {
+    justify-content: center;
+  }
+
+  .history-links a span {
+    display: none;
+  }
+
+  .toggle-button {
+    display: block;
+  }
+  .history-links {
+    margin-left: 10px;
+  }
+}
+
+.toggle-button {
+  display: none;
+  position: fixed;
+  top: 10px;
+  left: 10px;
+  z-index: 1001;
+  background-color: white;
+  border: none;
+  padding: 10px;
+  cursor: pointer;
 }

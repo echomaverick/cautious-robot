@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "../styles/history.css";
 import { GoHome } from "react-icons/go";
@@ -6,79 +7,62 @@ import { IoPersonCircleOutline } from "react-icons/io5";
 import { CiSaveDown1 } from "react-icons/ci";
 import { AiOutlineMessage } from "react-icons/ai";
 import { TbPremiumRights } from "react-icons/tb";
-import Button from "react-bootstrap/Button";
-import { useNavigate } from "react-router-dom";
+import { CiSettings } from "react-icons/ci";
+import { CiLogout } from "react-icons/ci";
+import { GiFeatheredWing } from "react-icons/gi";
 
 const ChatHistory = () => {
   const navigate = useNavigate();
+  const [isOpen, setIsOpen] = useState(false);
 
   const handleLogout = () => {
-    localStorage.removeItem('token');
-    navigate('/login');
+    localStorage.removeItem("token");
+    navigate("/login");
   };
   return (
-    <div className="history-div">
-      <div>
-        <h1
-          className="history_chat_name"
-          style={{ fontSize: 30, marginTop: 25 }}
-        >
-          TateGram
-        </h1>
-        <div className="history-links">
-          <a href="/home" className="history-link">
-            <GoHome /> Home
+    <>
+      <div className={`history-div ${isOpen ? "open" : ""}`}>
+        <div>
+          <a
+            className="history_chat_name"
+            style={{ fontSize: 30, marginTop: 25 }}
+            href="/home"
+          >
+            <GiFeatheredWing style={{ color: "black" }} />
           </a>
-          <a href="/profile" className="history-link">
-            <IoPersonCircleOutline /> Profile
-          </a>
-          <a href="/bookmarks" className="history-link">
-            <CiSaveDown1 /> Bookmarks
-          </a>
-          <a href="/messages" className="history-link">
-            <AiOutlineMessage /> Messages
-          </a>
-          <a href="/premium" className="history-link">
-            <TbPremiumRights /> Premium
-          </a>
+          <div className="history-links">
+            <a href="/home" className="history-link">
+              <GoHome className="icon" />
+              <span>Home</span>
+            </a>
+            <a href="/profile" className="history-link">
+              <IoPersonCircleOutline className="icon" />
+              <span>Profile</span>
+            </a>
+            <a href="/bookmarks" className="history-link">
+              <CiSaveDown1 className="icon" />
+              <span>Bookmarks</span>
+            </a>
+            <a href="/messages" className="history-link">
+              <AiOutlineMessage className="icon" />
+              <span>Messages</span>
+            </a>
+            <a href="/premium" className="history-link">
+              <TbPremiumRights className="icon" />
+              <span>Premium</span>
+            </a>
+            <a href="/settings" className="history-link">
+              <CiSettings className="icon" />
+              <span>Settings</span>
+            </a>
+            <a className="history-link" onClick={handleLogout}>
+              <CiLogout className="icon" />
+              <span>Logout</span>
+            </a>
+          </div>
         </div>
       </div>
-      <Button
-        style={{
-          padding: 10,
-          borderRadius: 20,
-          position: "fixed",
-          bottom: "50px",
-          transform: "translateX(-50%)",
-          zIndex: "1000",
-          width: "150px",
-          backgroundColor: "white",
-          border: "none",
-          color: "black",
-          fontSize: 22
-        }}
-        href="/settings"
-      >
-        Settings
-      </Button>
-      <Button
-        style={{
-          padding: 10,
-          borderRadius: 20,
-          position: "fixed",
-          bottom: 10,
-          transform: "translateX(-50%)",
-          zIndex: "1000",
-          width: "150px",
-          backgroundColor: "white",
-          border: "none",
-          color: "black",
-        }}
-        onClick={handleLogout} 
-      >
-        Logout
-      </Button>
-    </div>
+    </>
   );
 };
 

@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from "react";
-import ChatHistory from "./ChatHistory";
-import "../styles/profile.css";
-import ProfileHeader from "./ProfileHeader";
+import axios from "axios";
 import { createContext } from "react";
 import { Container } from "react-bootstrap";
-import axios from "axios";
+import ChatHistory from "./ChatHistory";
+import ProfileHeader from "./ProfileHeader";
+import "../styles/profile.css";
+
 export const ProfileContext = createContext(null);
 
 const Profile = () => {
@@ -12,6 +13,7 @@ const Profile = () => {
   const [followersCount, setFollowersCount] = useState(0);
   const [followingCount, setFollowingCount] = useState(0);
   const [postsCount, setPostsCount] = useState(0);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     fetchData();
@@ -30,7 +32,10 @@ const Profile = () => {
           console.error("Failed to fetch profile data");
         }
       } else {
-        console.error("Token not found in localStorage or invalid");
+        console.error(
+          "Token not found in localStorage or invalid",
+          error.message
+        );
       }
 
       const userId = getUserIdFromToken();
@@ -45,7 +50,10 @@ const Profile = () => {
           setFollowersCount(followersCount);
           setFollowingCount(followingCount);
         } else {
-          console.error("Failed to fetch followers and following counts");
+          console.error(
+            "Failed to fetch followers and following counts",
+            error.message
+          );
         }
 
         const userPostsResponse = await axios.get(
@@ -57,10 +65,14 @@ const Profile = () => {
           console.error("Failed to fetch user posts");
         }
       } else {
-        console.error("Token not found in localStorage or invalid");
+        console.error(
+          "Token not found in localStorage or invalid",
+          error.message
+        );
       }
     } catch (error) {
-      console.error("Error fetching data:", error);
+      console.error("Error fetching data:", error.message);
+      setError("Something went wrong. Please try again later.");
     }
   };
 
@@ -99,7 +111,7 @@ const Profile = () => {
           <ChatHistory />
         </div>
         <div className="main-content">
-          <Container style={{ border: "none", marginTop: "-50px" }}>
+          <Container>
             {profileData ? (
               <ProfileHeader
                 followers={followersCount}
@@ -108,7 +120,9 @@ const Profile = () => {
                 profile={profileData}
               />
             ) : (
-              <div>Loading profile...</div>
+              <div style={{ color: "red", marginTop: 20, textAlign: "center" }}>
+                {error}
+              </div>
             )}
           </Container>
         </div>

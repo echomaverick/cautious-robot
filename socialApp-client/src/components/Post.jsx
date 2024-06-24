@@ -35,7 +35,6 @@ const PostForm = () => {
         `http://localhost:8080/api/posts/create/${username}`,
         postData
       );
-      console.log("Post successfully created:", response.data);
       setPostTitle("");
       setPostContent("");
     } catch (error) {

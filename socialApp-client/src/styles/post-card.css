@@ -5,8 +5,9 @@
   padding: 20px;
   margin-bottom: 20px;
   margin: 20px 250px;
-  width: 50%;
+  width: 75%;
   position: relative;
+  max-width: 600px;
 }
 
 .post-header {
@@ -67,4 +68,18 @@
   color: grey;
   position: absolute;
   right: 20px;
+}
+@media (max-width: 1024px) {
+  .post-card {
+    width: 75%;
+    margin-right: 100px;
+  }
+}
+
+@media (max-width: 768px) {
+  .post-card {
+    width: 75%;
+    margin: 20px auto;
+    padding: 15px;
+  }
 }

@@ -4,6 +4,7 @@ import PostCard from "./PostCard";
 
 const PostList = () => {
   const [posts, setPosts] = useState([]);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     fetchPosts();
@@ -25,8 +26,17 @@ const PostList = () => {
       setPosts(sortedPosts);
     } catch (error) {
       console.error("Error fetching posts:", error.message);
+      setError("Something went wrong. Please try again later.");
     }
   };
+
+  if (error) {
+    return (
+      <div className="error-message" style={{color: "red"}}>
+        <p>{error}</p>
+      </div>
+    );
+  }
 
   return (
     <div className="post-list">

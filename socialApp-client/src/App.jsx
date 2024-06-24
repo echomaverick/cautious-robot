@@ -8,9 +8,8 @@ import {
 import LoginScript from "./components/Login";
 import Register from "./components/Register";
 import Home from "./components/Home";
-import NotFound from "./components/NotFound";
+import ComingSoon from "./components/ComingSoon";
 import Profile from "./components/Profile";
-import ChatHistory from "./components/ChatHistory";
 
 const App = () => {
   const isAuthenticated = () => {
@@ -36,7 +35,7 @@ const App = () => {
               isAuthenticated() ? <Profile /> : <Navigate to="/login" replace />
             }
           />
-          <Route path="*" element={<NotFound />} />
+          <Route path="*" element={<ComingSoon />} />
           <Route path="/" element={<Navigate to="/home" replace />} />
         </Routes>
       </div>
