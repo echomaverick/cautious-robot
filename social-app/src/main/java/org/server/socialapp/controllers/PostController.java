@@ -5,6 +5,8 @@ import org.server.socialapp.services.PostService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/posts")
 public class PostController {
@@ -19,7 +21,12 @@ public class PostController {
 	}
 
 	@GetMapping("/list/{userId}")
-	public Post listUserPosts(@PathVariable String userId) {
+	public List<Post> listUserPosts(@PathVariable String userId) {
 		return postService.getUserPosts(userId);
+	}
+
+	@GetMapping("/all")
+	public List<Post> getAllPosts() {
+		return postService.getAllDBPosts();
 	}
 }

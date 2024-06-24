@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -70,8 +71,18 @@ public class FollowService {
 			}
 		}
 	}
-	 public FollowerDTO getUserConnections(String userId) {
-        return followRepository.findByUserId(userId);
-    }
 
+	public FollowerDTO getUserConnections(String userId) {
+		return followRepository.findByUserId(userId);
+	}
+
+	public List<String> getUserFollowersList(String userId) {
+		FollowerDTO followerDTO = followRepository.findByUserId(userId);
+		return (followerDTO != null) ? followerDTO.getFollowerId() : new ArrayList<>();
+	}
+
+	public List<String> getUserFollowingList(String userId){
+		FollowerDTO followerDTO = followRepository.findByUserId(userId);
+		return (followerDTO != null) ? followerDTO.getFollowingId() : new ArrayList<>();
+	}
 }

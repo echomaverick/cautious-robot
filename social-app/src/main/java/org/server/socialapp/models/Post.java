@@ -3,6 +3,7 @@ package org.server.socialapp.models;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -17,6 +18,8 @@ public class Post {
 	private String content;
 	private List<Comments> commentsList = new ArrayList<>();
 	private String username;
+	private LocalDateTime postDate;
+
 
 	public Post(String id , String title , String content , String username) {
 		this.id = UUID.randomUUID().toString();
@@ -24,11 +27,13 @@ public class Post {
 		this.content = content;
 		this.username = username;
 		this.userId = userId;
+		this.postDate = LocalDateTime.now();
 	}
 
 	public String getUserId() {
 		return userId;
 	}
+
 	public void setUserId(String userId) {
 		this.userId = userId;
 	}
@@ -71,5 +76,13 @@ public class Post {
 
 	public void setUsername(String username) {
 		this.username = username;
+	}
+
+	public LocalDateTime getPostDate() {
+		return postDate;
+	}
+
+	public void setPostDate(LocalDateTime postDate) {
+		this.postDate = postDate;
 	}
 }

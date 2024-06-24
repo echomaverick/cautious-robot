@@ -9,6 +9,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class PostService {
 
@@ -31,7 +33,12 @@ public class PostService {
 		logger.info("Post created with ID: {}" , savedPost);
 		return post;
 	}
-	public Post getUserPosts(String postId) {
-		return postRepository.findByUserId(postId);
+
+	public List<Post> getUserPosts(String userId) {
+		return postRepository.findByUserId(userId);
+	}
+
+	public List<Post> getAllDBPosts() {
+		return postRepository.findAll();
 	}
 }

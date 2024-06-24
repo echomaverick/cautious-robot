@@ -5,6 +5,8 @@ import org.server.socialapp.services.FollowService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/users")
 public class FollowController {
@@ -25,5 +27,15 @@ public class FollowController {
 	@GetMapping("/list/{userId}")
 	public FollowerDTO getUserConnections(@PathVariable String userId) {
 		return followService.getUserConnections(userId);
+	}
+
+	@GetMapping("/{userId}/followers")
+	public List<String> getFollowers(@PathVariable String userId) {
+		return followService.getUserFollowersList(userId);
+	}
+
+	@GetMapping("/{userId}/following")
+	public List<String> getFollowing(@PathVariable String userId) {
+		return followService.getUserFollowingList(userId);
 	}
 }
