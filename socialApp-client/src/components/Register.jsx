@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import "../styles/register.css";
 import image from "../assets/hello.svg";
+import { GiFeatheredWing } from "react-icons/gi";
 
 const Register = () => {
   const [formData, setFormData] = useState({
@@ -55,7 +56,7 @@ const Register = () => {
         </div>
         <form id="registrationForm" onSubmit={handleSubmit}>
           <div className="container-sign">
-            <h1 className="regTitle">TateGram</h1>
+            <h1 className="regTitle"><GiFeatheredWing style={{ color: "black" }} /></h1>
             <p className="fill">
               Please fill in this form to create an account.
             </p>
