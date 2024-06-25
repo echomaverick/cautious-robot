@@ -21,23 +21,25 @@ const Profile = () => {
 
   const fetchData = async () => {
     try {
-      const username = getUsernameFromToken();
-      if (username) {
-        const profileResponse = await axios.get(
-          `http://localhost:8080/api/users/info/${username}`
-        );
-        if (profileResponse.status === 200) {
-          setProfileData(profileResponse.data);
-        } else {
-          console.error("Failed to fetch profile data");
-        }
+      const profileDataCached = getCachedProfileData();
+      if (profileDataCached) {
+        setProfileData(profileDataCached);
       } else {
-        console.error(
-          "Token not found in localStorage or invalid",
-          error.message
-        );
+        const username = getUsernameFromToken();
+        if (username) {
+          const profileResponse = await axios.get(
+            `http://localhost:8080/api/users/info/${username}`
+          );
+          if (profileResponse.status === 200) {
+            setProfileData(profileResponse.data);
+            cacheProfileData(profileResponse.data);
+          } else {
+            console.error("Failed to fetch profile data");
+          }
+        } else {
+          console.error("Token not found in localStorage or invalid");
+        }
       }
-
       const userId = getUserIdFromToken();
       if (userId) {
         const followersFollowingResponse = await axios.get(
@@ -50,12 +52,8 @@ const Profile = () => {
           setFollowersCount(followersCount);
           setFollowingCount(followingCount);
         } else {
-          console.error(
-            "Failed to fetch followers and following counts",
-            error.message
-          );
+          console.error("Failed to fetch followers and following counts");
         }
-
         const userPostsResponse = await axios.get(
           `http://localhost:8080/api/posts/list/${userId}`
         );
@@ -65,15 +63,21 @@ const Profile = () => {
           console.error("Failed to fetch user posts");
         }
       } else {
-        console.error(
-          "Token not found in localStorage or invalid",
-          error.message
-        );
+        console.error("Token not found in localStorage or invalid");
       }
     } catch (error) {
       console.error("Error fetching data:", error.message);
       setError("Something went wrong. Please try again later.");
     }
+  };
+
+  const cacheProfileData = (data) => {
+    localStorage.setItem("cachedProfileData", JSON.stringify(data));
+  };
+
+  const getCachedProfileData = () => {
+    const cachedProfileData = localStorage.getItem("cachedProfileData");
+    return cachedProfileData ? JSON.parse(cachedProfileData) : null;
   };
 
   const getUsernameFromToken = () => {
@@ -120,9 +124,7 @@ const Profile = () => {
                 profile={profileData}
               />
             ) : (
-              <div style={{ color: "red", marginTop: 20, textAlign: "center" }}>
-                {error}
-              </div>
+              <div className="profile-error">{error}</div>
             )}
           </Container>
         </div>

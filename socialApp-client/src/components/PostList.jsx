@@ -7,7 +7,12 @@ const PostList = () => {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    fetchPosts();
+    const cachedPosts = getCachedPosts();
+    if (cachedPosts) {
+      setPosts(cachedPosts);
+    } else {
+      fetchPosts();
+    }
   }, []);
 
   const fetchPosts = async () => {
@@ -24,15 +29,25 @@ const PostList = () => {
       const sortedPosts = [...postsWithDates, ...postsWithoutDates];
 
       setPosts(sortedPosts);
+      cachePosts(sortedPosts);
     } catch (error) {
       console.error("Error fetching posts:", error.message);
       setError("Something went wrong. Please try again later.");
     }
   };
 
+  const cachePosts = (postsToCache) => {
+    localStorage.setItem("cachedPosts", JSON.stringify(postsToCache));
+  };
+
+  const getCachedPosts = () => {
+    const cachedPosts = localStorage.getItem("cachedPosts");
+    return cachedPosts ? JSON.parse(cachedPosts) : null;
+  };
+
   if (error) {
     return (
-      <div className="error-message" style={{ color: "red", textAlign: "center", marginTop: "20px" }}>
+      <div className="error-message">
         <p>{error}</p>
       </div>
     );

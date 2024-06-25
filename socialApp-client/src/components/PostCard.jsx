@@ -92,7 +92,7 @@ PostCard.propTypes = {
   content: PropTypes.string.isRequired,
   commentsList: PropTypes.array.isRequired,
   postDate: PropTypes.string.isRequired,
-  userId: PropTypes.string.isRequired, // Add this line
+  userId: PropTypes.string.isRequired,
 };
 
 export default PostCard;

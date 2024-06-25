@@ -2,4 +2,13 @@
   display: flex;
   justify-content: space-evenly;
   margin-left: 20px;
+  align-items: center;
+}
+.profile-error{
+  color: red;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  font-size: 12px;
+  margin-top: 3px;
 }

@@ -73,14 +73,18 @@
 @media (max-width: 1024px) {
   .post-card {
     width: 75%;
-    margin-right: 100px;
   }
 }
 
 @media (max-width: 768px) {
   .post-card {
     width: 75%;
-    margin: 20px auto;
+    margin: 10px 70px;
     padding: 15px;
-  }
+   }
+   .error-message{
+    margin-left: 50px;
+    font-size: 13px;
+    color: red;
+   }
 }
