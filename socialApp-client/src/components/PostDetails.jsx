@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
-import "../styles/post-details.css";
 import defaultUserIcon from "/home/samuel/Documents/GitHub/cautious-robot/socialApp-client/src/depositphotos_137014128-stock-illustration-user-profile-icon.webp"; // Import default user icon image
 import { IoMdHeartEmpty } from "react-icons/io";
 import { BiRepost } from "react-icons/bi";
 import { AiOutlineComment } from "react-icons/ai";
 import { AiOutlineShareAlt } from "react-icons/ai";
+import "../styles/post-details.css";
+
+const CACHE_DURATION = 3600000;
 
 const PostDetail = () => {
   const { postId } = useParams();
@@ -15,39 +17,46 @@ const PostDetail = () => {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    const cachedPost = localStorage.getItem(`post_${postId}`);
-    const cachedUser = localStorage.getItem(`user_${postId}`);
-
-    if (cachedPost && cachedUser) {
-      setPost(JSON.parse(cachedPost));
-      setUser(JSON.parse(cachedUser));
-    } else {
-      fetchPostDetails();
-    }
+    fetchPostDetails();
   }, [postId]);
 
   const fetchPostDetails = async () => {
-    try {
-      const response = await axios.get(
-        `http://localhost:8080/api/posts/${postId}`
-      );
-      if (response.status === 200) {
-        const postData = response.data;
-        setPost(postData);
-        localStorage.setItem(`post_${postId}`, JSON.stringify(postData));
+    const cachedPostData = localStorage.getItem(`post_${postId}`);
+    const cachedUserData = localStorage.getItem(`user_${postId}`);
+    const cacheTimestamp = localStorage.getItem(`cacheTimestamp_${postId}`);
 
-        const userId = postData.userId;
-        if (userId) {
-          fetchUserDetails(userId);
+    const isCacheValid =
+      cacheTimestamp && Date.now() - cacheTimestamp < CACHE_DURATION;
+
+    if (cachedPostData && cachedUserData && isCacheValid) {
+      setPost(JSON.parse(cachedPostData));
+      setUser(JSON.parse(cachedUserData));
+    } else {
+      try {
+        const response = await axios.get(
+          `http://localhost:8080/api/posts/${postId}`
+        );
+        if (response.status === 200) {
+          const postData = response.data;
+          setPost(postData);
+          localStorage.setItem(`post_${postId}`, JSON.stringify(postData));
+          localStorage.setItem(
+            `cacheTimestamp_${postId}`,
+            Date.now().toString()
+          );
+          const userId = postData.userId;
+          if (userId) {
+            fetchUserDetails(userId);
+          } else {
+            setError("User ID not found in post details");
+          }
         } else {
-          setError("User ID not found in post details");
+          setError("Failed to fetch post details");
         }
-      } else {
-        setError("Failed to fetch post details");
+      } catch (error) {
+        console.error("Error fetching post details:", error.message);
+        setError("Something went wrong. Please try again later.");
       }
-    } catch (error) {
-      console.error("Error fetching post details:", error.message);
-      setError("Something went wrong. Please try again later.");
     }
   };
 
@@ -103,7 +112,7 @@ const PostDetail = () => {
         <div className="post-detail-content">
           <p>{post.content}</p>
         </div>
-        <small className="post-date">
+        <small className="date-post">
           {formatDate(post.postDate)}
           {" • "}
           {post.views ? `${post.views} Views` : "N/A Views"}
@@ -122,13 +131,20 @@ const PostDetail = () => {
         </div>
         <hr className="hr3" />
         <div className="comments">
-          <h3>Comments:</h3>
-          <ul className="comment-list">
+          <ul className="list-comment">
             {post.commentsList.map((comment) => (
               <li key={comment.id} className="comment-item">
-                <strong>{comment.user.username}</strong>: {comment.content}
+                <img
+                  src={user.profileImage || defaultUserIcon}
+                  alt="User Icon"
+                  className="comm-icon"
+                />
+                <div>
+                  <p className="user-id">@{comment.userId}</p>
+                </div>
+                <p className="comm-content">{comment.content}</p>
                 <br />
-                <small>
+                <small className="post-comment-date">
                   {formatDate(comment.commentDate)}
                   {" • "}
                   {comment.views ? `${comment.views} Views` : "N/A Views"}
