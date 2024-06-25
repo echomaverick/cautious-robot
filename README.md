@@ -14,7 +14,6 @@ This is a simple social media application that is still under development. It co
 - [Future Improvements](#future-improvements)
 - [Contributing](#contributing)
 - [License](#license)
-- 
 ## Overview
 
 This project aims to create a basic social media platform where users can connect, follow each other, and share posts. It is a work in progress with ongoing development to add more features and enhance functionality.
