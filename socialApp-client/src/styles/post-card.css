@@ -8,6 +8,7 @@
   width: 75%;
   position: relative;
   max-width: 600px;
+  cursor: pointer;
 }
 
 .post-header {

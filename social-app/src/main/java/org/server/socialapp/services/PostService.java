@@ -41,4 +41,7 @@ public class PostService {
 	public List<Post> getAllDBPosts() {
 		return postRepository.findAll();
 	}
+	public Post getPostById(String postId) {
+		return postRepository.findById(postId).orElse(null);
+	}
 }

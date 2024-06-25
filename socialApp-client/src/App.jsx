@@ -10,6 +10,8 @@ import Register from "./components/Register";
 import Home from "./components/Home";
 import ComingSoon from "./components/ComingSoon";
 import Profile from "./components/Profile";
+import PostDetail from "./components/PostDetails";
+import UserDetails from "./components/UserDetails";
 
 const App = () => {
   const isAuthenticated = () => {
@@ -35,6 +37,27 @@ const App = () => {
               isAuthenticated() ? <Profile /> : <Navigate to="/login" replace />
             }
           />
+          <Route
+            path="/posts/:postId"
+            element={
+              isAuthenticated() ? (
+                <PostDetail />
+              ) : (
+                <Navigate to="/login" replace />
+              )
+            }
+          />
+          <Route
+            path="/users/:userId"
+            element={
+              isAuthenticated() ? (
+                <UserDetails />
+              ) : (
+                <Navigate to="/login" replace />
+              )
+            }
+          />
+
           <Route path="*" element={<ComingSoon />} />
           <Route path="/" element={<Navigate to="/home" replace />} />
         </Routes>

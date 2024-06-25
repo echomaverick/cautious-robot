@@ -32,7 +32,7 @@ const PostList = () => {
 
   if (error) {
     return (
-      <div className="error-message" style={{color: "red"}}>
+      <div className="error-message" style={{ color: "red", textAlign: "center", marginTop: "20px" }}>
         <p>{error}</p>
       </div>
     );
@@ -43,10 +43,12 @@ const PostList = () => {
       {posts.map((post) => (
         <PostCard
           key={post.id}
+          id={post.id}
           title={post.title}
           content={post.content}
           commentsList={post.commentsList}
           postDate={post.postDate}
+          userId={post.userId}
         />
       ))}
     </div>

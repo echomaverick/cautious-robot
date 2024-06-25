@@ -23,4 +23,9 @@ public class UserController {
 		System.out.println("User getting information: " + username);
 		return userService.getUserInfo(username);
 	}
+	@GetMapping("/{userId}")
+	public User getUserInfoById(@PathVariable String userId) {
+		System.out.println("User getting information: " + userId);
+		return userService.getUserInfoById(userId);
+	}
 }

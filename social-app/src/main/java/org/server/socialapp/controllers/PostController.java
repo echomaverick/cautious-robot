@@ -29,4 +29,8 @@ public class PostController {
 	public List<Post> getAllPosts() {
 		return postService.getAllDBPosts();
 	}
+	@GetMapping("/{postId}")
+	public Post getPost(@PathVariable String postId) {
+		return postService.getPostById(postId);
+	}
 }
