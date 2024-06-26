@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import PostCard from "./PostCard";
 
+const CACHE_DURATION = 1800000;
+
 const PostList = () => {
   const [posts, setPosts] = useState([]);
   const [error, setError] = useState(null);
@@ -10,6 +12,13 @@ const PostList = () => {
     const cachedPosts = getCachedPosts();
     if (cachedPosts) {
       setPosts(cachedPosts);
+      const lastCacheTime = localStorage.getItem("lastCacheTime");
+      const isCacheValid =
+        lastCacheTime && Date.now() - parseInt(lastCacheTime) < CACHE_DURATION;
+
+      if (!isCacheValid) {
+        fetchPosts();
+      }
     } else {
       fetchPosts();
     }
@@ -38,6 +47,7 @@ const PostList = () => {
 
   const cachePosts = (postsToCache) => {
     localStorage.setItem("cachedPosts", JSON.stringify(postsToCache));
+    localStorage.setItem("lastCacheTime", Date.now().toString());
   };
 
   const getCachedPosts = () => {

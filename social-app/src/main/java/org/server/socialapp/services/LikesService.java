@@ -88,4 +88,8 @@ public class LikesService {
 	public List<Like> getLikesForComment(String commentId) {
 		return likesRepository.findByCommentIdContaining(commentId);
 	}
+
+	public List<Like> getLikesForUser(String userId){
+		return likesRepository.findByUserId(userId);
+	}
 }

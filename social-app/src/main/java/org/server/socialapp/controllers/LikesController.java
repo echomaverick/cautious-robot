@@ -33,4 +33,9 @@ public class LikesController {
 	public List<Like> getLikesForComment(@PathVariable String commentId) {
 		return likesService.getLikesForComment(commentId);
 	}
+
+	@GetMapping("/{userId}")
+	public List<Like> getLikesForUser(@PathVariable String userId) {
+		return likesService.getLikesForUser(userId);
+	}
 }

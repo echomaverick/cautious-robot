@@ -8,10 +8,10 @@ import {
 import LoginScript from "./components/Login";
 import Register from "./components/Register";
 import Home from "./components/Home";
-import ComingSoon from "./components/ComingSoon";
 import Profile from "./components/Profile";
 import PostDetail from "./components/PostDetails";
 import UserDetails from "./components/UserDetails";
+import NotFound from "./components/NotFound";
 
 const App = () => {
   const isAuthenticated = () => {
@@ -25,6 +25,7 @@ const App = () => {
         <Routes>
           <Route path="/register" element={<Register />} />
           <Route path="/login" element={<LoginScript />} />
+
           <Route
             path="/home"
             element={
@@ -58,7 +59,7 @@ const App = () => {
             }
           />
 
-          <Route path="*" element={<ComingSoon />} />
+          <Route path="*" element={<NotFound />} />
           <Route path="/" element={<Navigate to="/home" replace />} />
         </Routes>
       </div>

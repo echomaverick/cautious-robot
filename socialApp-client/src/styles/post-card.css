@@ -26,6 +26,8 @@
 
 .post-header-text {
   flex: 1;
+  justify-content: flex-start;
+  display: flex;
 }
 
 .post-image {
@@ -38,6 +40,7 @@
 .footer-icons {
   display: flex;
   align-items: center;
+  justify-content: space-evenly;
 }
 
 .icon {
@@ -45,6 +48,17 @@
   height: 24px;
   margin-right: 10px;
   cursor: pointer;
+}
+
+.icon-wrapper {
+  display: flex;
+  align-items: center;
+}
+
+.comment-num {
+  margin-right: 5px;
+  font-size: 14px;
+  margin-top: 17px;
 }
 
 .post-comments {
@@ -64,12 +78,40 @@
   color: #888;
   font-size: 0.8rem;
 }
+
 .post-date {
-  font-size: 9px;
+  font-size: 8.5px;
   color: grey;
   position: absolute;
-  right: 20px;
+  left: 75px;
+  top: 50px;
 }
+
+.share-icons {
+  display: flex;
+  justify-content: space-evenly;
+}
+
+.share-icon {
+  background-color: transparent;
+}
+
+.youtube-icon {
+  width: 90px;
+}
+
+.reddit-icon {
+  width: 100px;
+}
+
+.x-icon {
+  width: 80px;
+}
+
+.facebook-icon {
+  width: 60px;
+}
+
 @media (max-width: 1024px) {
   .post-card {
     width: 75%;
@@ -81,10 +123,10 @@
     width: 75%;
     margin: 10px 70px;
     padding: 15px;
-   }
-   .error-message{
+  }
+  .error-message {
     margin-left: 50px;
     font-size: 13px;
     color: red;
-   }
+  }
 }

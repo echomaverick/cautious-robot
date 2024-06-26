@@ -4,11 +4,10 @@ import axios from "axios";
 import defaultUserIcon from "/home/samuel/Documents/GitHub/cautious-robot/socialApp-client/src/depositphotos_137014128-stock-illustration-user-profile-icon.webp"; // Import default user icon image
 import { IoMdHeartEmpty } from "react-icons/io";
 import { BiRepost } from "react-icons/bi";
-import { AiOutlineComment } from "react-icons/ai";
-import { AiOutlineShareAlt } from "react-icons/ai";
+import { AiOutlineComment, AiOutlineShareAlt } from "react-icons/ai";
 import "../styles/post-details.css";
 
-const CACHE_DURATION = 3600000;
+const CACHE_DURATION = 30 * 60 * 1000;
 
 const PostDetail = () => {
   const { postId } = useParams();
@@ -17,46 +16,54 @@ const PostDetail = () => {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    fetchPostDetails();
-  }, [postId]);
-
-  const fetchPostDetails = async () => {
     const cachedPostData = localStorage.getItem(`post_${postId}`);
     const cachedUserData = localStorage.getItem(`user_${postId}`);
     const cacheTimestamp = localStorage.getItem(`cacheTimestamp_${postId}`);
 
+    const currentTime = Date.now();
     const isCacheValid =
-      cacheTimestamp && Date.now() - cacheTimestamp < CACHE_DURATION;
+      cacheTimestamp &&
+      currentTime - parseInt(cacheTimestamp, 10) < CACHE_DURATION;
 
     if (cachedPostData && cachedUserData && isCacheValid) {
       setPost(JSON.parse(cachedPostData));
       setUser(JSON.parse(cachedUserData));
-    } else {
-      try {
-        const response = await axios.get(
-          `http://localhost:8080/api/posts/${postId}`
-        );
-        if (response.status === 200) {
-          const postData = response.data;
-          setPost(postData);
-          localStorage.setItem(`post_${postId}`, JSON.stringify(postData));
-          localStorage.setItem(
-            `cacheTimestamp_${postId}`,
-            Date.now().toString()
-          );
-          const userId = postData.userId;
-          if (userId) {
-            fetchUserDetails(userId);
-          } else {
-            setError("User ID not found in post details");
-          }
-        } else {
-          setError("Failed to fetch post details");
-        }
-      } catch (error) {
-        console.error("Error fetching post details:", error.message);
-        setError("Something went wrong. Please try again later.");
+
+      // Check if it's time to refresh cache (every 30 minutes)
+      if (
+        !cacheTimestamp ||
+        currentTime - parseInt(cacheTimestamp, 10) >= CACHE_DURATION
+      ) {
+        fetchPostDetails();
       }
+    } else {
+      fetchPostDetails();
+    }
+  }, [postId]);
+
+  const fetchPostDetails = async () => {
+    try {
+      const response = await axios.get(
+        `http://localhost:8080/api/posts/${postId}`
+      );
+      if (response.status === 200) {
+        const postData = response.data;
+        setPost(postData);
+        localStorage.setItem(`post_${postId}`, JSON.stringify(postData));
+        localStorage.setItem(`cacheTimestamp_${postId}`, Date.now().toString());
+
+        const userId = postData.userId;
+        if (userId) {
+          fetchUserDetails(userId);
+        } else {
+          setError("User ID not found in post details");
+        }
+      } else {
+        setError("Failed to fetch post details");
+      }
+    } catch (error) {
+      console.error("Error fetching post details:", error.message);
+      setError("Something went wrong. Please try again later.");
     }
   };
 
