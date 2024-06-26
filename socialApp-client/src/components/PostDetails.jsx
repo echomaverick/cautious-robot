@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
-import defaultUserIcon from "/home/samuel/Documents/GitHub/cautious-robot/socialApp-client/src/depositphotos_137014128-stock-illustration-user-profile-icon.webp"; // Import default user icon image
 import { IoMdHeartEmpty } from "react-icons/io";
 import { BiRepost } from "react-icons/bi";
 import { AiOutlineComment, AiOutlineShareAlt } from "react-icons/ai";
+import defaultUserIcon from "/home/samuel/Documents/GitHub/cautious-robot/socialApp-client/src/depositphotos_137014128-stock-illustration-user-profile-icon.webp"; // Import default user icon image
+import loaderImage from "/home/samuel/Documents/GitHub/cautious-robot/socialApp-client/src/assets/mona-loading-dark-7701a7b97370.gif";
 import "../styles/post-details.css";
 
 const CACHE_DURATION = 30 * 60 * 1000;
@@ -14,6 +15,7 @@ const PostDetail = () => {
   const [post, setPost] = useState(null);
   const [user, setUser] = useState(null);
   const [error, setError] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const cachedPostData = localStorage.getItem(`post_${postId}`);
@@ -39,6 +41,12 @@ const PostDetail = () => {
     } else {
       fetchPostDetails();
     }
+
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+    }, 2000);
+
+    return () => clearTimeout(timer);
   }, [postId]);
 
   const fetchPostDetails = async () => {
@@ -100,6 +108,21 @@ const PostDetail = () => {
 
   if (error) {
     return <div style={{ color: "red" }}>{error}</div>;
+  }
+
+  if (isLoading) {
+    return (
+      <div
+        className="loader"
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <img src={loaderImage} alt="Loading..." style={{ width: 30 }} />
+      </div>
+    );
   }
 
   return (

@@ -4,6 +4,7 @@ import { createContext } from "react";
 import { Container } from "react-bootstrap";
 import ChatHistory from "./ChatHistory";
 import ProfileHeader from "./ProfileHeader";
+import loaderImage from "/home/samuel/Documents/GitHub/cautious-robot/socialApp-client/src/assets/mona-loading-dark-7701a7b97370.gif";
 import "../styles/profile.css";
 
 export const ProfileContext = createContext(null);
@@ -14,9 +15,16 @@ const Profile = () => {
   const [followingCount, setFollowingCount] = useState(0);
   const [postsCount, setPostsCount] = useState(0);
   const [error, setError] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+    }, 3000);
+
     fetchData();
+
+    return () => clearTimeout(timer);
   }, []);
 
   const fetchData = async () => {
@@ -107,6 +115,23 @@ const Profile = () => {
     }
     return null;
   };
+
+  if (isLoading) {
+    return (
+      <div
+        className="loader"
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          backgroundColor: "rgba(255, 255, 255, 0.8)",
+          zIndex: 900,
+        }}
+      >
+        <img src={loaderImage} alt="Loading..." style={{ width: 30 }} />
+      </div>
+    );
+  }
 
   return (
     <ProfileContext.Provider value={profileData}>

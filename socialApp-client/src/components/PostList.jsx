@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import PostCard from "./PostCard";
+import loaderImage from "/home/samuel/Documents/GitHub/cautious-robot/socialApp-client/src/assets/mona-loading-dark-7701a7b97370.gif";
 
 const CACHE_DURATION = 1800000;
 
 const PostList = () => {
   const [posts, setPosts] = useState([]);
   const [error, setError] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const cachedPosts = getCachedPosts();
@@ -22,6 +24,12 @@ const PostList = () => {
     } else {
       fetchPosts();
     }
+
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+    }, 3000);
+
+    return () => clearTimeout(timer);
   }, []);
 
   const fetchPosts = async () => {
@@ -59,6 +67,21 @@ const PostList = () => {
     return (
       <div className="error-message">
         <p>{error}</p>
+      </div>
+    );
+  }
+
+  if (isLoading) {
+    return (
+      <div
+        className="loader"
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <img src={loaderImage} alt="Loading..." style={{ width: 30 }} />
       </div>
     );
   }

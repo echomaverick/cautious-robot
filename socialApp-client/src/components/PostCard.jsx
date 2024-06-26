@@ -5,6 +5,8 @@ import axios from "axios";
 import { IoMdHeartEmpty, IoMdHeart } from "react-icons/io";
 import { BiRepost } from "react-icons/bi";
 import { AiOutlineComment, AiOutlineShareAlt } from "react-icons/ai";
+import { MdOutlineAddComment } from "react-icons/md";
+import { IoSend } from "react-icons/io5";
 import Modal from "react-bootstrap/Modal";
 import defaultUserIcon from "/home/samuel/Documents/GitHub/cautious-robot/socialApp-client/src/depositphotos_137014128-stock-illustration-user-profile-icon.webp";
 import redditIcon from "/home/samuel/Documents/GitHub/cautious-robot/socialApp-client/src/assets/reddit.png";
@@ -129,6 +131,11 @@ const PostCard = ({ id, title, content, postDate, userId }) => {
       return;
     }
 
+    if (newComment.trim() === "") {
+      console.error("Empty comment cannot be posted.");
+      return;
+    }
+
     try {
       const response = await axios.post(
         `http://localhost:8080/api/posts/comments/create/${commenterId}/${id}`,
@@ -248,39 +255,49 @@ const PostCard = ({ id, title, content, postDate, userId }) => {
         </div>
         {expanded && (
           <div className="post-comments">
-            <h3>Comments: </h3>
+            <h3 className="comment-title">
+              Comments:{" "}
+              <button
+                className="add-comment-button"
+                onClick={toggleNewCommentForm}
+              >
+                <MdOutlineAddComment /> Add
+              </button>
+            </h3>
             <ul className="comment-list">
               {commentsList.map((comment) => (
-                <li key={comment.id} className="comment-item">
-                  <strong>{comment.userId}</strong>: {comment.content}
-                  <br />
-                  <small>{formatDate(comment.commentDate)}</small>
+                <li key={comment.id} className="comment-item1">
+                  <img
+                    src={
+                      user
+                        ? user.profileImage || defaultUserIcon
+                        : defaultUserIcon
+                    }
+                    alt="User Icon"
+                    className="user-icon1"
+                  />
+                  <strong className="user-ide">@{comment.userId}</strong>
+                  <p className="user-comment">{comment.content}</p>
+                  <small className="small-timer">
+                    {formatDate(comment.commentDate)}
+                  </small>
                 </li>
               ))}
             </ul>
-            {showNewCommentForm ? (
+            {showNewCommentForm && (
               <div className="new-comment-form">
                 <textarea
                   value={newComment}
                   onChange={handleCommentChange}
                   placeholder="Write your comment..."
-                  rows={4}
-                  cols={50}
                 />
                 <button
-                  className="add-comment-button"
+                  className="post-comment-button"
                   onClick={navigateToAddComment}
                 >
-                  Post Comment
+                  <IoSend />
                 </button>
               </div>
-            ) : (
-              <button
-                className="add-comment-button"
-                onClick={toggleNewCommentForm}
-              >
-                Add Comment
-              </button>
             )}
           </div>
         )}

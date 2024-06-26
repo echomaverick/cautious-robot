@@ -11,6 +11,7 @@
   z-index: 1000;
   overflow-y: auto;
   transition: width 0.3s ease;
+  height: 100%;
 }
 
 .history-links {
@@ -70,6 +71,9 @@
 @media (max-width: 768px) {
   .history-div {
     width: 50px;
+    transform: translateX(0);
+    left: 0;
+    z-index: 1000;
   }
 
   .history-links a {

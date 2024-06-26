@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import "bootstrap/dist/css/bootstrap.min.css";
-import "../styles/history.css";
 import { GoHome } from "react-icons/go";
 import { IoPersonCircleOutline } from "react-icons/io5";
 import { CiSaveDown1 } from "react-icons/ci";
@@ -14,6 +13,7 @@ import { GiFeatheredWing } from "react-icons/gi";
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import Form from "react-bootstrap/Form";
+import "../styles/history.css";
 
 const ChatHistory = () => {
   const navigate = useNavigate();
@@ -96,7 +96,7 @@ const ChatHistory = () => {
   return (
     <>
       <div className={`history-div ${isOpen ? "open" : ""}`}>
-        <div>
+        <div className="history-div-2" style={{height: "100vh"}}>
           <a
             className="history_chat_name"
             style={{ fontSize: 30, marginTop: 25 }}
