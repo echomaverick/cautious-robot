@@ -127,7 +127,7 @@ const ChatHistory = () => {
             </a>
             <a className="history-link">
               <CiSettings className="icon" onClick={handleShowModal} />
-              <span>Settings</span>
+              <span onClick={handleShowModal} className="settings-span">Settings</span>
             </a>
             <a className="history-link" onClick={handleLogout}>
               <CiLogout className="icon" />

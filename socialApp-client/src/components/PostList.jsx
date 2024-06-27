@@ -73,15 +73,9 @@ const PostList = () => {
 
   if (isLoading) {
     return (
-      <div
-        className="loader"
-        style={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-        }}
-      >
+      <div className="loader">
         <img src={loaderImage} alt="Loading..." style={{ width: 30 }} />
+        <p className="loader-text">One moment, please...</p>
       </div>
     );
   }

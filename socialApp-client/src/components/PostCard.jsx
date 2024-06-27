@@ -256,7 +256,7 @@ const PostCard = ({ id, title, content, postDate, userId }) => {
         {expanded && (
           <div className="post-comments">
             <h3 className="comment-title">
-              Comments:{" "}
+              Comments{" "}
               <button
                 className="add-comment-button"
                 onClick={toggleNewCommentForm}
