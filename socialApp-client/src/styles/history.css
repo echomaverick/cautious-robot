@@ -70,6 +70,17 @@
   cursor: pointer;
 }
 
+.user-lists {
+  list-style: none;
+  margin-bottom: 10px;
+  margin-right: 30px;
+}
+
+.user-lists a {
+  text-decoration: none;
+  color: black;
+}
+
 @media (max-width: 768px) {
   .history-div {
     width: 50px;
@@ -91,6 +102,17 @@
   }
   .history-links {
     margin-left: 10px;
+  }
+
+  .user-lists {
+    list-style: none;
+    margin-bottom: 10px;
+    margin-right: 30px;
+  }
+
+  .user-lists a {
+    text-decoration: none;
+    color: black;
   }
 }
 

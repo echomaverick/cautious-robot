@@ -4,4 +4,7 @@ body {
   font-weight: 400;
   font-style: normal;
   background-color: white;
+  scrollbar-width: thin;
+  scrollbar-color: #888 #f1f1f1;
+  overflow-x: hidden; 
 }

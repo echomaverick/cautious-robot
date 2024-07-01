@@ -1,57 +1,52 @@
-.buttons-style {
+.butt-style {
+  display: flex;
+  gap: 15px;
+}
+.followfollowers {
+  display: flex;
+  justify-content: flex-start;
+}
+.use-links {
   display: flex;
 }
-.following-followers {
-  display: flex;
-  margin-left: 5px;
-  margin-top: -20px;
-  margin-bottom: -30px;
-}
-.user-links {
+.use-title {
   display: flex;
 }
-.user-title {
-  display: flex;
-  margin-top: -30px;
-}
-.user-bio {
+.use-bio {
   display: flex;
 }
-.button-edit {
+.butt-edit {
   font-size: 12px;
   background-color: lightgrey;
   border: none;
   color: black;
+  width: 150px;
 }
-.button-edit:hover {
+.butt-edit:hover {
   color: black;
   background-color: lightgrey;
 }
-.test {
+.again {
   background-color: white;
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
   transition: 0.3s;
   width: 1000px;
   margin-top: 30px;
-  margin-left: auto;
   margin-right: auto;
+  margin-left: auto;
 }
-.useri {
+.userimg {
   width: 100px;
   position: relative;
   margin-top: 20;
   border-radius: 100%;
 }
-.button-posts {
-  font-size: 12px;
-  background-color: lightgrey;
+.usernam-p {
+  margin-top: 5px;
 }
-.button-settings {
-  font-size: 12px;
-  background-color: lightgrey;
-}
+
 @media (max-width: 768px) {
-  .colol {
+  .colo {
     margin-left: 40px;
     width: 250px;
     position: relative;
@@ -59,35 +54,28 @@
     margin-top: 10px;
     margin-right: 20px;
   }
-  .username-p {
+  .usernam-p {
     margin-right: 25px;
     justify-content: center;
     display: flex;
     margin-bottom: 10px;
   }
-  .buttons-style {
+  .butt-style {
     display: flex;
     height: 30px;
     font-size: 1em;
+    gap: 0;
   }
-  .button-edit {
+  .butt-edit {
     font-size: 12px;
     background-color: lightgrey;
     border: none;
     color: black;
   }
-  .button-posts {
-    font-size: 12px;
-    background-color: lightgrey;
-  }
-  .button-settings {
-    font-size: 12px;
-    background-color: lightgrey;
-  }
-  .user-links {
+  .use-links {
     margin-right: 300px;
   }
-  .test {
+  .again {
     background-color: white;
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
     transition: 0.3s;
@@ -97,10 +85,10 @@
     display: flex;
     justify-content: center;
     text-align: center;
-    margin-right: auto;
+    margin-right: 35px;
     margin-left: auto;
   }
-  .user-bio {
+  .use-bio {
     display: flex;
     justify-content: center;
   }

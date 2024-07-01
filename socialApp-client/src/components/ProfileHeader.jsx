@@ -171,20 +171,25 @@ const ProfileHeader = ({ followers, following, posts, profile }) => {
       <Col md={4} className="test-again">
         <Image
           src={profileImage}
-          style={{ width: "100px", position: "relative", marginTop: 20, borderRadius: "100%"}}
+          style={{
+            width: "100px",
+            position: "relative",
+            marginTop: 20,
+            borderRadius: "100%",
+          }}
           className="useri"
         />
       </Col>
       <Col md={7} className="colol">
-        <span
-          className="username-p">
-          {username}
-        </span>
+        <span className="username-p">{username}</span>
         <div className="buttons-style">
           <Button className="light me-1 button-edit" onClick={handleShowModal}>
             Edit
           </Button>
-          <Button variant="light me-2 button-posts" onClick={handleShowPostModal}>
+          <Button
+            variant="light me-2 button-posts"
+            onClick={handleShowPostModal}
+          >
             Posts
           </Button>
           <Button variant="light me-2 button-settings">
@@ -194,42 +199,46 @@ const ProfileHeader = ({ followers, following, posts, profile }) => {
         <br />
         <br />
         <div className="following-followers">
-        <span className="me-4" style={{ fontSize: 12 }}>
-          <strong>1</strong> posts
-        </span>
-        <span
-          className="me-4"
-          onClick={handleFollowersClick}
-          style={{ fontSize: 12 }}
-        >
-          <strong>{followers}</strong> followers
-        </span>
-        <span
-          className="me-4"
-          onClick={handleFollowingClick}
-          style={{ fontSize: 12 }}
-        >
-          <strong>{following}</strong> following
-        </span>
+          <span className="me-4" style={{ fontSize: 12 }}>
+            <strong>1</strong> posts
+          </span>
+          <span
+            className="me-4"
+            onClick={handleFollowersClick}
+            style={{ fontSize: 12 }}
+          >
+            <strong>{followers}</strong> followers
+          </span>
+          <span
+            className="me-4"
+            onClick={handleFollowingClick}
+            style={{ fontSize: 12 }}
+          >
+            <strong>{following}</strong> following
+          </span>
         </div>
         <br />
         <br />
         <div>
-        <p style={{ margin: 0, fontWeight: "bold" }} className="user-title">{title}</p>
-        <p style={{ margin: 0 }} className="user-bio">{bio}</p>
-        <div className="user-links">
-          {links.map((link, index) => (
-            <a
-              key={index}
-              href={link}
-              target="_blank"
-              rel="noopener noreferrer"
-              style={{ marginRight: "10px" }}
-            >
-              {getServiceName(link)}
-            </a>
-          ))}
-        </div>
+          <p style={{ margin: 0, fontWeight: "bold" }} className="user-title">
+            {title}
+          </p>
+          <p style={{ margin: 0 }} className="user-bio">
+            {bio}
+          </p>
+          <div className="user-links">
+            {links.map((link, index) => (
+              <a
+                key={index}
+                href={link}
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{ marginRight: "10px" }}
+              >
+                {getServiceName(link)}
+              </a>
+            ))}
+          </div>
         </div>
         <Modal show={showModal} onHide={handleCloseModal}>
           <Modal.Header closeButton>

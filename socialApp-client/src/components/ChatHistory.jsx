@@ -10,19 +10,21 @@ import { TbPremiumRights } from "react-icons/tb";
 import { CiSettings } from "react-icons/ci";
 import { CiLogout } from "react-icons/ci";
 import { GiFeatheredWing } from "react-icons/gi";
+import { CiSearch } from "react-icons/ci";
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import Form from "react-bootstrap/Form";
+import loaderImage from "/home/samuel/Documents/GitHub/cautious-robot/socialApp-client/src/assets/mona-loading-dark-7701a7b97370.gif";
 import "../styles/history.css";
 
 const ChatHistory = () => {
   const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
   const [showModal, setShowModal] = useState(false);
-  const [bio, setBio] = useState("");
-  const [title, setTitle] = useState("");
-  const [links, setLinks] = useState([]);
-  const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [searchResults, setSearchResults] = useState([]);
+  const [message, setMessage] = useState("");
 
   // Function to get username from token
   const getUsernameFromToken = () => {
@@ -39,64 +41,93 @@ const ChatHistory = () => {
     return null;
   };
 
+  const getUserIdFromToken = () => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      try {
+        const decodedToken = JSON.parse(atob(token.split(".")[1]));
+        return decodedToken.userId;
+      } catch (error) {
+        console.error("Error decoding token:", error.message);
+        return null;
+      }
+    }
+    return null;
+  };
+
   const handleLogout = () => {
     localStorage.removeItem("token");
     navigate("/login");
   };
 
-  const handleShowModal = () => setShowModal(true);
-  const handleCloseModal = () => setShowModal(false);
+  const handleShowModal = () => {
+    setShowModal(true);
+  };
 
-  // Function to handle updating profile
-  const handleUpdateProfile = async () => {
-    const username = getUsernameFromToken();
-    if (!username) {
-      console.error("Username not found in token.");
-      return;
-    }
+  const handleCloseModal = () => {
+    setShowModal(false);
+    setSearchQuery("");
+    setSearchResults([]);
+    setMessage("");
+  };
 
-    const updateData = {
-      bio: bio,
-      title: title,
-      links: links,
-    };
-
+  const handleSearch = async () => {
+    setLoading(true);
     try {
-      const response = await axios.put(
-        `http://localhost:8080/api/users/update/${username}`,
-        updateData
-      );
-      if (response.status === 200) {
-        console.log("Profile updated successfully.");
-        handleCloseModal();
-      } else {
-        console.error("Failed to update profile.");
-        setError("Failed to update profile.");
+      if (searchQuery) {
+        let response;
+        if (searchQuery.includes(" ")) {
+          const [name, surname] = searchQuery.split(" ");
+          response = await axios.get(
+            `http://localhost:8080/api/search/users?name=${name}&surname=${surname}`
+          );
+        } else {
+          response = await axios.get(
+            `http://localhost:8080/api/search/users?username=${searchQuery}`
+          );
+        }
+        await new Promise((resolve) => setTimeout(resolve, 3000));
+
+        if (response.data.length === 0) {
+          setMessage(
+            `Didn't find anything for "${searchQuery}". Try another search.`
+          );
+        } else {
+          setSearchResults(response.data);
+        }
       }
     } catch (error) {
-      console.error("Error updating profile:", error.message);
-      setError("Error updating profile. Please try again later.");
+      console.error("Error searching users", error);
+      setMessage("Error searching users");
+    } finally {
+      setLoading(false);
     }
   };
 
-  const handleInputChange = (event) => {
-    const { name, value } = event.target;
-    if (name === "bio") {
-      setBio(value);
-    } else if (name === "title") {
-      setTitle(value);
+  const handleInputChange = (e) => {
+    setSearchQuery(e.target.value);
+    setSearchResults([]);
+    setMessage("");
+  };
+
+  const handleKeyPress = (e) => {
+    if (e.key === "Enter") {
+      handleSearch();
     }
   };
 
-  const handleLinksChange = (event) => {
-    const linksArray = event.target.value.split(",").map((link) => link.trim());
-    setLinks(linksArray);
+  const handleProfileRedirect = (userId) => {
+    if (userId === getUserIdFromToken()) {
+      navigate("/profile");
+    } else {
+      navigate(`/users/${userId}`);
+    }
   };
 
   return (
     <>
       <div className={`history-div ${isOpen ? "open" : ""}`}>
-        <div className="history-div-2" style={{height: "100vh"}}>
+        <div className="history-div-2" style={{ height: "100vh" }}>
           <a
             className="history_chat_name"
             style={{ fontSize: 30, marginTop: 25 }}
@@ -113,6 +144,10 @@ const ChatHistory = () => {
               <IoPersonCircleOutline className="icon" />
               <span>Profile</span>
             </a>
+            <a className="history-link" onClick={handleShowModal}>
+              <CiSearch className="icon" />
+              <span>Search</span>
+            </a>
             <a href="/bookmarks" className="history-link">
               <CiSaveDown1 className="icon" />
               <span>Bookmarks</span>
@@ -126,58 +161,62 @@ const ChatHistory = () => {
               <span>Premium</span>
             </a>
             <a className="history-link">
-              <CiSettings className="icon" onClick={handleShowModal} />
-              <span onClick={handleShowModal} className="settings-span">Settings</span>
+              <CiSettings className="icon" />
+              <span className="settings-span">Settings</span>
             </a>
             <a className="history-link" onClick={handleLogout}>
               <CiLogout className="icon" />
-              <span>Logout</span>
+              <span onClick={handleLogout}>Logout</span>
             </a>
-            <Modal show={showModal} onHide={handleCloseModal}>
-              <Modal.Header closeButton>
-                <Modal.Title>Update your profile</Modal.Title>
-              </Modal.Header>
-              <Modal.Body>
-                <Form.Group controlId="formBio">
-                  <Form.Label>Bio</Form.Label>
-                  <Form.Control
-                    type="text"
-                    name="bio"
-                    value={bio}
-                    onChange={handleInputChange}
-                  />
-                </Form.Group>
-                <Form.Group controlId="formTitle">
-                  <Form.Label>Title</Form.Label>
-                  <Form.Control
-                    type="text"
-                    name="title"
-                    value={title}
-                    onChange={handleInputChange}
-                  />
-                </Form.Group>
-                <Form.Group controlId="formLinks">
-                  <Form.Label>Links (comma separated)</Form.Label>
-                  <Form.Control
-                    as="textarea"
-                    rows={3}
-                    name="links"
-                    value={links.join(", ")}
-                    onChange={handleLinksChange}
-                  />
-                </Form.Group>
-              </Modal.Body>
-              <Modal.Footer>
-                <Button variant="secondary" onClick={handleCloseModal}>
-                  Cancel
-                </Button>
-                <Button variant="danger" onClick={handleUpdateProfile}>
-                  Update
-                </Button>
-              </Modal.Footer>
-            </Modal>
           </div>
         </div>
+        <Modal show={showModal} onHide={handleCloseModal}>
+          <Modal.Header closeButton>
+            <Modal.Title>Search Users</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            <Form.Group controlId="searchForm">
+              <Form.Control
+                type="text"
+                placeholder="Enter username or name and surname"
+                value={searchQuery}
+                onChange={handleInputChange}
+                onKeyPress={handleKeyPress}
+              />
+            </Form.Group>
+            {searchResults.length > 0 && (
+              <ul className="user-lists">
+                {searchResults.map((user) => (
+                  <li key={user.id}>
+                    <a href="#" onClick={() => handleProfileRedirect(user.id)}>
+                      {user.username}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            )}
+            {searchResults.length === 0 && !loading && <p>{message}</p>}
+            <Button variant="primary" onClick={handleSearch} disabled={loading}>
+              {loading ? (
+                <>
+                  <img
+                    src={loaderImage}
+                    style={{ width: 30, marginRight: 10 }}
+                    alt="Loading..."
+                  />{" "}
+                  Searching...
+                </>
+              ) : (
+                "Search"
+              )}
+            </Button>
+          </Modal.Body>
+          <Modal.Footer>
+            <Button variant="secondary" onClick={handleCloseModal}>
+              Close
+            </Button>
+          </Modal.Footer>
+        </Modal>
       </div>
     </>
   );
