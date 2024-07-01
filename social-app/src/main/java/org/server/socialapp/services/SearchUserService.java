@@ -13,11 +13,11 @@ public class SearchUserService {
 	@Autowired
 	private UserRepository userRepository;
 
-	 public List<User> searchUser(String username) {
-        return userRepository.findByUsernameContaining(username);
-    }
+	public List<User> searchUser(String username) {
+		return userRepository.findByUsernameContaining(username);
+	}
 
-    public List<User> searchUserByNameAndSurname(String name, String surname) {
-        return userRepository.findByNameContainingAndSurnameContaining(name, surname);
-    }
+	public List<User> searchUserByNameAndSurname(String name , String surname) {
+		return userRepository.findByNameContainingAndSurnameContaining(name , surname);
+	}
 }

@@ -78,10 +78,20 @@ const ProfileHeader = ({ followers, following, posts, profile }) => {
   const { username, title, bio, links } = profile;
 
   const getServiceName = (url) => {
-    if (url.includes("github.com")) {
-      return "GitHub";
-    } else if (url.includes("instagram.com")) {
-      return "Instagram";
+    const trustedDomains = [
+      "github.com",
+      "instagram.com",
+      "twitter.com",
+      "youtube.com",
+      "linkedin.com",
+      "facebook.com",
+      "reddit.com",
+    ];
+
+    const matchedDomain = trustedDomains.find((domain) => url.includes(domain));
+
+    if (matchedDomain) {
+      return matchedDomain;
     } else {
       return "Unknown";
     }
