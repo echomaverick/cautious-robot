@@ -53,7 +53,7 @@ const PostDetail = () => {
 
   const fetchPostDetails = async () => {
     try {
-      const response = await axios.get(`${apiU}/posts/${postId}`);
+      const response = await axios.get(`${apiUrl}/posts/${postId}`);
       if (response.status === 200) {
         const postData = response.data;
         setPost(postData);
@@ -77,7 +77,7 @@ const PostDetail = () => {
 
   const fetchUserDetails = async (userId) => {
     try {
-      const response = await axios.get(`${apiU}/users/${userId}`);
+      const response = await axios.get(`${apiUrl}/users/${userId}`);
       if (response.status === 200) {
         const userData = response.data;
         setUser(userData);
