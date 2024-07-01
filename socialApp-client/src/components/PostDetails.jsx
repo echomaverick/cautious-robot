@@ -17,6 +17,8 @@ const PostDetail = () => {
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
 
+  const apiUrl = import.meta.env.VITE_API_BASE_URL;
+
   useEffect(() => {
     const cachedPostData = localStorage.getItem(`post_${postId}`);
     const cachedUserData = localStorage.getItem(`user_${postId}`);
@@ -51,9 +53,7 @@ const PostDetail = () => {
 
   const fetchPostDetails = async () => {
     try {
-      const response = await axios.get(
-        `http://localhost:8080/api/posts/${postId}`
-      );
+      const response = await axios.get(`${apiU}/posts/${postId}`);
       if (response.status === 200) {
         const postData = response.data;
         setPost(postData);
@@ -77,9 +77,7 @@ const PostDetail = () => {
 
   const fetchUserDetails = async (userId) => {
     try {
-      const response = await axios.get(
-        `http://localhost:8080/api/users/${userId}`
-      );
+      const response = await axios.get(`${apiU}/users/${userId}`);
       if (response.status === 200) {
         const userData = response.data;
         setUser(userData);

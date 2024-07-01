@@ -14,15 +14,15 @@ const UserDetail = () => {
   const [followersCount, setFollowersCount] = useState(0);
   const [followingCount, setFollowingCount] = useState(0);
 
+  const apiUrl = import.meta.env.VITE_API_BASE_URL;
+
   useEffect(() => {
     fetchUserDetails();
   }, [userId]);
 
   const fetchUserDetails = async () => {
     try {
-      const response = await axios.get(
-        `http://localhost:8080/api/users/${userId}`
-      );
+      const response = await axios.get(`${apiUrl}/users/${userId}`);
       if (response.status === 200) {
         setUser(response.data);
       } else {
@@ -61,6 +61,12 @@ const UserDetail = () => {
       "facebook.com",
       "reddit.com",
     ];
+
+    if (!url.startsWith("https://")) {
+      return "Not allowed";
+    }
+
+    const domain = new URL(url).hostname;
 
     const matchedDomain = trustedDomains.find((domain) => url.includes(domain));
 
@@ -114,12 +120,12 @@ const UserDetail = () => {
             <br />
             <div>
               <p
-                style={{ margin: 0, fontWeight: "bold" }}
+                style={{fontWeight: "bold" }}
                 className="use-title"
               >
                 {user.title}
               </p>
-              <p style={{ margin: 0 }} className="user-bio">
+              <p className="user-bio">
                 {user.bio}
               </p>
               <div className="use-links">

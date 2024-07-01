@@ -17,6 +17,8 @@ const Profile = () => {
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
 
+  const apiUrl = import.meta.env.VITE_API_BASE_URL;
+
   useEffect(() => {
     const timer = setTimeout(() => {
       setIsLoading(false);
@@ -36,7 +38,7 @@ const Profile = () => {
         const username = getUsernameFromToken();
         if (username) {
           const profileResponse = await axios.get(
-            `http://localhost:8080/api/users/info/${username}`
+            `${apiUrl}/users/info/${username}`
           );
           if (profileResponse.status === 200) {
             setProfileData(profileResponse.data);
@@ -51,7 +53,7 @@ const Profile = () => {
       const userId = getUserIdFromToken();
       if (userId) {
         const followersFollowingResponse = await axios.get(
-          `http://localhost:8080/api/users/list/${userId}`
+          `${apiUrl}/users/list/${userId}`
         );
         if (followersFollowingResponse.status === 200) {
           const { followerId, followingId } = followersFollowingResponse.data;
@@ -63,7 +65,7 @@ const Profile = () => {
           console.error("Failed to fetch followers and following counts");
         }
         const userPostsResponse = await axios.get(
-          `http://localhost:8080/api/posts/list/${userId}`
+          `${apiUrl}/posts/list/${userId}`
         );
         if (userPostsResponse.status === 200) {
           setPostsCount(userPostsResponse.data.length);

@@ -4,10 +4,11 @@ import "../styles/login.css";
 import image from "../assets/hello.svg";
 import { GiFeatheredWing } from "react-icons/gi";
 
-
 const LoginScript = () => {
   const navigate = useNavigate();
   const [error, setError] = useState(null);
+
+  const apiUrl = import.meta.env.VITE_API_BASE_URL;
 
   useEffect(() => {
     const checkTokenExpiration = () => {
@@ -30,7 +31,7 @@ const LoginScript = () => {
     };
 
     checkTokenExpiration();
-  }, [navigate]);
+  }, []);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -39,7 +40,7 @@ const LoginScript = () => {
     const password = event.target.password.value;
 
     try {
-      const response = await fetch("http://localhost:8080/api/users/login", {
+      const response = await fetch(`${apiUrl}/users/login`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -68,7 +69,9 @@ const LoginScript = () => {
           <img src={image} alt="" className="hello-image" />
         </div>
         <div className="container-sign">
-          <h1 className="login"><GiFeatheredWing style={{ color: "black" }} /></h1>
+          <h1 className="login">
+            <GiFeatheredWing style={{ color: "black" }} />
+          </h1>
           <p className="fill">
             Please fill in this form to login to your account.
           </p>

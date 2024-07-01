@@ -20,6 +20,8 @@ const ProfileHeader = ({ followers, following, posts, profile }) => {
   const [error, setError] = useState(null);
   const navigate = useNavigate();
 
+  const apiUrl = import.meta.env.VITE_API_BASE_URL;
+
   useEffect(() => {
     if (profile) {
       setBioInput(profile.bio);
@@ -43,7 +45,6 @@ const ProfileHeader = ({ followers, following, posts, profile }) => {
   };
   const handleClosePostModal = () => setShowPostModal(false);
 
-  // Function to handle updating profile
   const handleUpdateProfile = async () => {
     const username = getUsernameFromToken();
     if (!username) {
@@ -59,7 +60,7 @@ const ProfileHeader = ({ followers, following, posts, profile }) => {
 
     try {
       const response = await axios.put(
-        `http://localhost:8080/api/users/update/${username}`,
+        `${apiUrl}/users/update/${username}`,
         updateData
       );
       if (response.status === 200) {
@@ -88,6 +89,12 @@ const ProfileHeader = ({ followers, following, posts, profile }) => {
       "reddit.com",
     ];
 
+    if (!url.startsWith("https://")) {
+      return "Not allowed";
+    }
+
+    const domain = new URL(url).hostname;
+
     const matchedDomain = trustedDomains.find((domain) => url.includes(domain));
 
     if (matchedDomain) {
@@ -99,12 +106,12 @@ const ProfileHeader = ({ followers, following, posts, profile }) => {
 
   const handleFollowersClick = () => {
     const userId = getUserIdFromToken();
-    navigate(`http://localhost:8080/api/users/${userId}/followers`);
+    navigate(`${apiUrl}/users/${userId}/followers`);
   };
 
   const handleFollowingClick = () => {
     const userId = getUserIdFromToken();
-    navigate(`http://localhost:8080/api/users/${userId}/following`);
+    navigate(`${apiUrl}/users/${userId}/following`);
   };
 
   const fetchUserPosts = async () => {
@@ -115,9 +122,7 @@ const ProfileHeader = ({ followers, following, posts, profile }) => {
     }
 
     try {
-      const response = await axios.get(
-        `http://localhost:8080/api/posts/list/${userId}`
-      );
+      const response = await axios.get(`${apiUrl}/posts/list/${userId}`);
       if (response.status === 200) {
         setUserPosts(response.data);
       } else {
@@ -170,6 +175,10 @@ const ProfileHeader = ({ followers, following, posts, profile }) => {
       }
     }
     return null;
+  };
+
+  const handlePostClick = (postId) => {
+    navigate(`/posts/${postId}`);
   };
 
   if (!profile) {
@@ -230,7 +239,7 @@ const ProfileHeader = ({ followers, following, posts, profile }) => {
         <br />
         <br />
         <div>
-          <p style={{ margin: 0, fontWeight: "bold" }} className="user-title">
+          <p style={{ fontWeight: "bold" }} className="user-title">
             {title}
           </p>
           <p style={{ margin: 0 }} className="user-bio">
@@ -301,7 +310,9 @@ const ProfileHeader = ({ followers, following, posts, profile }) => {
             {userPosts.length > 0 ? (
               <ul>
                 {userPosts.map((post) => (
-                  <li key={post.id}>{post.content}</li>
+                  <li key={post.id} onClick={() => handlePostClick(post.id)}>
+                    {post.content}
+                  </li>
                 ))}
               </ul>
             ) : (

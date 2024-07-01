@@ -76,13 +76,13 @@ img.hello-image {
 @media (max-width: 1024px) {
   .screen {
     flex-direction: column;
-    height: auto; 
-    text-align: center; 
+    height: auto;
+    text-align: center;
   }
 
   img.hello-image {
-    width: 70%; 
-    margin-top: 20px; 
+    width: 70%;
+    margin-top: 20px;
   }
 
   .container-sign {

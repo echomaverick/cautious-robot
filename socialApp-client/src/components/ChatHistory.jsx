@@ -26,6 +26,8 @@ const ChatHistory = () => {
   const [searchResults, setSearchResults] = useState([]);
   const [message, setMessage] = useState("");
 
+  const apiUrl = import.meta.env.VITE_API_BASE_URL;
+
   // Function to get username from token
   const getUsernameFromToken = () => {
     const token = localStorage.getItem("token");
@@ -79,11 +81,11 @@ const ChatHistory = () => {
         if (searchQuery.includes(" ")) {
           const [name, surname] = searchQuery.split(" ");
           response = await axios.get(
-            `http://localhost:8080/api/search/users?name=${name}&surname=${surname}`
+            `${apiUrl}/search/users?name=${name}&surname=${surname}`
           );
         } else {
           response = await axios.get(
-            `http://localhost:8080/api/search/users?username=${searchQuery}`
+            `${apiUrl}/search/users?username=${searchQuery}`
           );
         }
         await new Promise((resolve) => setTimeout(resolve, 3000));

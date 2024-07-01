@@ -29,14 +29,14 @@ const PostCard = ({ id, title, content, postDate, userId }) => {
   const [copied, setCopied] = useState(false);
   const [showShareModal, setShowShareModal] = useState(false);
 
+  const apiUrl = import.meta.env.VITE_API_BASE_URL;
+
   const navigate = useNavigate();
 
   useEffect(() => {
     const fetchUserDetails = async () => {
       try {
-        const response = await axios.get(
-          `http://localhost:8080/api/users/${userId}`
-        );
+        const response = await axios.get(`${apiUrl}/users/${userId}`);
         if (response.status === 200) {
           setUser(response.data);
         }
@@ -56,9 +56,7 @@ const PostCard = ({ id, title, content, postDate, userId }) => {
       }
 
       try {
-        const response = await axios.get(
-          `http://localhost:8080/api/likes/${userIdFromToken}`
-        );
+        const response = await axios.get(`${apiUrl}/likes/${userIdFromToken}`);
         if (response.status === 200) {
           const likedPosts = response.data[0]?.postId || [];
           if (likedPosts.includes(id)) {
@@ -76,9 +74,7 @@ const PostCard = ({ id, title, content, postDate, userId }) => {
   useEffect(() => {
     const fetchPostDetails = async () => {
       try {
-        const response = await axios.get(
-          `http://localhost:8080/api/posts/${id}`
-        );
+        const response = await axios.get(`${apiUrl}/posts/${id}`);
         if (response.status === 200) {
           const { commentsList } = response.data;
           setCommentsList(commentsList);
@@ -138,7 +134,7 @@ const PostCard = ({ id, title, content, postDate, userId }) => {
 
     try {
       const response = await axios.post(
-        `http://localhost:8080/api/posts/comments/create/${commenterId}/${id}`,
+        `${apiUrl}/posts/comments/create/${commenterId}/${id}`,
         {
           content: newComment,
         }
@@ -177,9 +173,7 @@ const PostCard = ({ id, title, content, postDate, userId }) => {
 
     try {
       if (!liked) {
-        await axios.post(
-          `http://localhost:8080/api/likes/post/${userIdFromToken}/${id}`
-        );
+        await axios.post(`${apiUrl}/likes/post/${userIdFromToken}/${id}`);
         setLiked(true);
       }
     } catch (error) {
@@ -224,16 +218,26 @@ const PostCard = ({ id, title, content, postDate, userId }) => {
       });
   };
 
+  const handleProfileLinkClick = (e) => {
+    e.stopPropagation();
+    const loggedInUserId = getUserIdFromToken();
+    if (userId === loggedInUserId) {
+      navigate("/profile");
+    } else {
+      navigate(`/users/${userId}`);
+    }
+  };
+
   return (
     <div className="post-card">
       <div className="post-header">
-        <Link to={`/users/${userId}`} onClick={(e) => e.stopPropagation()}>
+        <div onClick={handleProfileLinkClick}>
           <img
             src={user ? user.profileImage || defaultUserIcon : defaultUserIcon}
             alt="User Icon"
             className="user-icon"
           />
-        </Link>
+        </div>
         <div className="post-header-text" onClick={navigateToPost}>
           <h2>{title}</h2>
         </div>

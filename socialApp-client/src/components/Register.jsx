@@ -15,6 +15,8 @@ const Register = () => {
   const [error, setError] = useState(null);
   const navigate = useNavigate();
 
+  const apiUrl = import.meta.env.VITE_API_BASE_URL;
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prevData) => ({
@@ -26,10 +28,7 @@ const Register = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post(
-        "http://localhost:8080/api/users/register",
-        formData
-      );
+      const response = await axios.post(`${apiUrl}/users/register`, formData);
       if (response.status === 200) {
         alert("User registered successfully!");
         navigate("/home");
@@ -56,7 +55,9 @@ const Register = () => {
         </div>
         <form id="registrationForm" onSubmit={handleSubmit}>
           <div className="container-sign">
-            <h1 className="regTitle"><GiFeatheredWing style={{ color: "black" }} /></h1>
+            <h1 className="regTitle">
+              <GiFeatheredWing style={{ color: "black" }} />
+            </h1>
             <p className="fill">
               Please fill in this form to create an account.
             </p>

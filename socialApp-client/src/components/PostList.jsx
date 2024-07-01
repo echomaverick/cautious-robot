@@ -10,6 +10,8 @@ const PostList = () => {
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
 
+  const apiUrl = import.meta.env.VITE_API_BASE_URL;
+
   useEffect(() => {
     const cachedPosts = getCachedPosts();
     if (cachedPosts) {
@@ -34,7 +36,7 @@ const PostList = () => {
 
   const fetchPosts = async () => {
     try {
-      const response = await axios.get("http://localhost:8080/api/posts/all");
+      const response = await axios.get(`${apiUrl}/posts/all`);
 
       const postsWithDates = response.data.filter((post) => post.postDate);
       const postsWithoutDates = response.data.filter((post) => !post.postDate);

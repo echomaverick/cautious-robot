@@ -8,6 +8,7 @@
 }
 .use-links {
   display: flex;
+  margin-right: 20px;
 }
 .use-title {
   display: flex;
@@ -55,10 +56,9 @@
     margin-right: 20px;
   }
   .usernam-p {
-    margin-right: 25px;
+    margin-right: 10px;
     justify-content: center;
     display: flex;
-    margin-bottom: 10px;
   }
   .butt-style {
     display: flex;
@@ -72,9 +72,6 @@
     border: none;
     color: black;
   }
-  .use-links {
-    margin-right: 300px;
-  }
   .again {
     background-color: white;
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
@@ -85,11 +82,28 @@
     display: flex;
     justify-content: center;
     text-align: center;
-    margin-right: 35px;
-    margin-left: auto;
+    margin-right: auto;
+    margin-left: 70px;
   }
   .use-bio {
     display: flex;
     justify-content: center;
+  }
+  .use-title {
+    display: flex;
+    margin-left: 20px;
+    margin-top: -20px;
+    margin-bottom: -5px;
+  }
+  .followfollowers {
+    display: flex;
+    justify-content: flex-start;
+    margin-right: auto;
+    margin-left: auto;
+    margin-bottom: -10px;
+    margin-top: -15px;
+  }
+  .use-links{
+    margin-left: -15px;
   }
 }

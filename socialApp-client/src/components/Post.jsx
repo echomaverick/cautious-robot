@@ -6,6 +6,8 @@ const PostForm = () => {
   const [postTitle, setPostTitle] = useState("");
   const [postContent, setPostContent] = useState("");
 
+  const apiUrl = import.meta.env.VITE_API_BASE_URL;
+
   const handlePostTitleChange = (event) => {
     setPostTitle(event.target.value);
   };
@@ -32,7 +34,7 @@ const PostForm = () => {
 
     try {
       const response = await axios.post(
-        `http://localhost:8080/api/posts/create/${username}`,
+        `${apiUrl}/posts/create/${username}`,
         postData
       );
       setPostTitle("");
