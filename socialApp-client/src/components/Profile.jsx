@@ -130,7 +130,29 @@ const Profile = () => {
           zIndex: 900,
         }}
       >
-        <img src={loaderImage} alt="Loading..." style={{ width: 30 }} />
+        <img
+          src={loaderImage}
+          alt="Loading..."
+          style={{
+            width: 30,
+            position: "fixed",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+          }}
+        />
+        <p
+          className="loader-text"
+          style={{
+            fontSize: 12,
+            position: "fixed",
+            top: "52%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+          }}
+        >
+          One moment, please...
+        </p>
       </div>
     );
   }

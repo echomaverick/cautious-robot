@@ -4,7 +4,7 @@ import axios from "axios";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { GoHome } from "react-icons/go";
 import { IoPersonCircleOutline } from "react-icons/io5";
-import { CiSaveDown1 } from "react-icons/ci";
+import { IoBookmarkOutline } from "react-icons/io5";
 import { AiOutlineMessage } from "react-icons/ai";
 import { TbPremiumRights } from "react-icons/tb";
 import { CiSettings } from "react-icons/ci";
@@ -151,7 +151,7 @@ const ChatHistory = () => {
               <span>Search</span>
             </a>
             <a href="/bookmarks" className="history-link">
-              <CiSaveDown1 className="icon" />
+              <IoBookmarkOutline className="icon" />
               <span>Bookmarks</span>
             </a>
             <a href="/messages" className="history-link">
@@ -168,7 +168,9 @@ const ChatHistory = () => {
             </a>
             <a className="history-link" onClick={handleLogout}>
               <CiLogout className="icon" />
-              <span onClick={handleLogout}>Logout</span>
+              <span onClick={handleLogout} style={{ cursor: "pointer" }}>
+                Logout
+              </span>
             </a>
           </div>
         </div>
