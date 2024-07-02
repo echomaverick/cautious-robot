@@ -12,6 +12,8 @@ import Profile from "./components/Profile";
 import PostDetail from "./components/PostDetails";
 import UserDetails from "./components/UserDetails";
 import NotFound from "./components/NotFound";
+import SavedPosts from "./components/SavedPosts";
+import PremiumPage from "./components/PremiumPage";
 
 const App = () => {
   const isAuthenticated = () => {
@@ -58,7 +60,17 @@ const App = () => {
               )
             }
           />
-
+          <Route
+            path="/bookmarks"
+            element={
+              isAuthenticated() ? (
+                <SavedPosts />
+              ) : (
+                <Navigate to="/login" replace />
+              )
+            }
+          />
+          <Route path="/premium" element={<PremiumPage />} />
           <Route path="*" element={<NotFound />} />
           <Route path="/" element={<Navigate to="/home" replace />} />
         </Routes>

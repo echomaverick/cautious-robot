@@ -1,0 +1,67 @@
+.saved-posts {
+  max-width: 800px;
+  margin: auto;
+  padding: 20px;
+}
+
+.saved-posts-title {
+  font-size: 20px;
+  margin-bottom: 20px;
+  margin-top: -33px;
+}
+
+.back-button {
+  background-color: lightgrey;
+  color: black;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  position: relative;
+}
+
+.back-button:hover {
+  background-color: #ccc;
+}
+
+.saved-posts-list {
+  display: grid;
+  gap: 20px;
+}
+
+.posts-card {
+  padding: 15px;
+  background-color: #f0f0f0;
+  border-radius: 8px;
+}
+
+.post-title {
+  font-size: 20px;
+  margin-bottom: 10px;
+}
+
+.post-content {
+  font-size: 16px;
+}
+
+@media (max-width: 768px) {
+  .back-button {
+    background-color: lightgrey;
+    color: black;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    margin-right: 300px;
+  }
+  .back-icon {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+  }
+}

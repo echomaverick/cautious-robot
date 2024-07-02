@@ -7,7 +7,6 @@ import { IoPersonCircleOutline } from "react-icons/io5";
 import { IoBookmarkOutline } from "react-icons/io5";
 import { AiOutlineMessage } from "react-icons/ai";
 import { TbPremiumRights } from "react-icons/tb";
-import { CiSettings } from "react-icons/ci";
 import { CiLogout } from "react-icons/ci";
 import { GiFeatheredWing } from "react-icons/gi";
 import { CiSearch } from "react-icons/ci";
@@ -161,10 +160,6 @@ const ChatHistory = () => {
             <a href="/premium" className="history-link">
               <TbPremiumRights className="icon" />
               <span>Premium</span>
-            </a>
-            <a className="history-link">
-              <CiSettings className="icon" />
-              <span className="settings-span">Settings</span>
             </a>
             <a className="history-link" onClick={handleLogout}>
               <CiLogout className="icon" />
