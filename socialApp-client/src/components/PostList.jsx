@@ -38,8 +38,12 @@ const PostList = () => {
     try {
       const response = await axios.get(`${apiUrl}/posts/all`);
 
-      const postsWithDates = response.data.filter((post) => post.postDate);
-      const postsWithoutDates = response.data.filter((post) => !post.postDate);
+      const postsWithDates = response.data.filter(
+        (post) => typeof post.postDate === "string"
+      );
+      const postsWithoutDates = response.data.filter(
+        (post) => !post.postDate || typeof post.postDate !== "string"
+      );
 
       postsWithDates.sort(
         (a, b) => new Date(b.postDate) - new Date(a.postDate)

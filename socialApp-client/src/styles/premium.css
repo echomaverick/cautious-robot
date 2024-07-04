@@ -162,7 +162,7 @@
 }
 @media (max-width: 768px) {
   .back-button {
-    background-color: white;
+    background-color: lightgrey;
     color: black;
     border: none;
     cursor: pointer;

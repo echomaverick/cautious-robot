@@ -4,37 +4,39 @@ import org.server.socialapp.services.ImageUploaderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.util.List;
+
 @RestController
+@RequestMapping("/api/images")
 public class ImageUploadController {
 
-	private final ImageUploaderService imageUploaderService;
+    private final ImageUploaderService imageUploaderService;
 
-	@Value("${bucketName}")
-	private String bucketName;
+    @Value("${bucketName}")
+    private String bucketName;
 
-	@Autowired
-	public ImageUploadController(ImageUploaderService imageUploaderService) {
-		this.imageUploaderService = imageUploaderService;
-	}
+    @Autowired
+    public ImageUploadController(ImageUploaderService imageUploaderService) {
+        this.imageUploaderService = imageUploaderService;
+    }
 
-	@PostMapping("/api/images/upload")
-	public ResponseEntity<?> uploadImage(@RequestParam("file") MultipartFile file) {
-		if (file == null || file.isEmpty()) {
-			return ResponseEntity.status(400).body("File is missing");
-		}
+    @PostMapping("/upload")
+    public ResponseEntity<?> uploadImages(@RequestParam("files") List<MultipartFile> files) {
+        if (files.isEmpty()) {
+            return ResponseEntity.badRequest().body("No files uploaded");
+        }
 
-		try {
-			String objectName = file.getOriginalFilename();
-			imageUploaderService.uploadImage(bucketName , objectName , file);
-			String imageUrl = "https://storage.googleapis.com/" + bucketName + "/" + objectName;
-			return ResponseEntity.ok().body("Image uploaded successfully. URL: " + imageUrl);
-		} catch (Exception e) {
-			return ResponseEntity.status(500).body("Image upload failed: " + e.getMessage());
-		}
-	}
+        try {
+            List<String> imageUrls = imageUploaderService.uploadImages(bucketName, files);
+            return ResponseEntity.ok().body("Images uploaded successfully. URLs: " + imageUrls);
+        } catch (IOException e) {
+            return ResponseEntity.status(500).body("Failed to upload images: " + e.getMessage());
+        } catch (Exception e) {
+	        throw new RuntimeException(e);
+        }
+    }
 }

@@ -9,22 +9,34 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.FileInputStream;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class ImageUploaderService {
 
-	public void uploadImage(String bucketName , String objectName , MultipartFile file) throws Exception {
-		String credentialsPath = "src/main/resources/inbound-rune-422808-u5-2ed72c3b4a3d.json";
+	public List<String> uploadImages(String bucketName , List<MultipartFile> files) throws Exception {
+		String credentialsPath = "src/main/resources/inbound-rune-422808-u5-2d0e81fd69ad.json";
 
 		Storage storage = StorageOptions.newBuilder()
 				.setCredentials(GoogleCredentials.fromStream(new FileInputStream(credentialsPath)))
 				.build()
 				.getService();
 
-		BlobId blobId = BlobId.of(bucketName , objectName);
-		BlobInfo blobInfo = BlobInfo.newBuilder(blobId).build();
-		storage.create(blobInfo , file.getBytes());
+		List<String> imageUrls = new ArrayList<>();
 
-		System.out.println("Image uploaded successfully to bucket " + bucketName + " as object " + objectName);
+		for (MultipartFile file : files) {
+			String objectName = file.getOriginalFilename();
+			BlobId blobId = BlobId.of(bucketName , objectName);
+			BlobInfo blobInfo = BlobInfo.newBuilder(blobId).build();
+			storage.create(blobInfo , file.getBytes());
+
+			String imageUrl = "https://storage.googleapis.com/" + bucketName + "/" + objectName;
+			imageUrls.add(imageUrl);
+
+			System.out.println("Image uploaded successfully to bucket " + bucketName + " as object " + objectName);
+		}
+
+		return imageUrls;
 	}
 }

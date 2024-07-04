@@ -227,18 +227,13 @@ const PostCard = ({ id, title, content, postDate, userId }) => {
     }
   };
 
-  const formatDate = (dateString) => {
-    if (!dateString) return "";
-    const options = {
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-      hour: "numeric",
-      minute: "numeric",
-      hour12: true,
-    };
-    return new Date(dateString).toLocaleString("en-US", options);
+  const isValidDate = (date) => {
+    return !isNaN(Date.parse(date));
   };
+
+  const formattedDate = isValidDate(postDate)
+    ? format(new Date(postDate), "PPpp")
+    : "N/A";
 
   const handleShowModal = () => setShowModal(true);
   const handleCloseModal = () => setShowModal(false);
@@ -305,7 +300,7 @@ const PostCard = ({ id, title, content, postDate, userId }) => {
             <IoBookmarkOutline className="icon" onClick={toggleSave} />
           )}
           <AiOutlineShareAlt className="icon" onClick={handleShowShareModal} />
-          {postDate && <div className="post-date">{formatDate(postDate)}</div>}
+          {postDate && <div className="post-date">{formattedDate}</div>}
         </div>
         {expanded && (
           <div className="post-comments">

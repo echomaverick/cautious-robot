@@ -11,13 +11,16 @@ const PremiumPage = () => {
   const handleBackHome = () => {
     navigate("/home");
   };
+
   return (
     <div className="premium-page">
       <div className="background">
-      <button className="back-button" onClick={handleBackHome}>
-        <IoIosArrowRoundBack className="back-icon" onClick={handleBackHome}/>
-      </button>
-        <h1 className="-plan-title" style={{top: 10}}>Choose the best plan for you</h1>
+        <button className="back-button" onClick={handleBackHome}>
+          <IoIosArrowRoundBack className="back-icon" />
+        </button>
+        <h1 className="-plan-title" style={{ top: 10 }}>
+          Choose the best plan for you
+        </h1>
         <div className="container">
           <div className="panel pricing-table">
             <div className="pricing-plan">
