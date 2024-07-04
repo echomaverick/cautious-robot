@@ -16,7 +16,7 @@ import java.util.List;
 public class ImageUploaderService {
 
 	public List<String> uploadImages(String bucketName , List<MultipartFile> files) throws Exception {
-		String credentialsPath = "src/main/resources/inbound-rune-422808-u5-2d0e81fd69ad.json";
+		String credentialsPath = "src/main/resources/project-id.json";
 
 		Storage storage = StorageOptions.newBuilder()
 				.setCredentials(GoogleCredentials.fromStream(new FileInputStream(credentialsPath)))
