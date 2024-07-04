@@ -42,7 +42,6 @@
         </dependency>
 
 
-
         <dependency>
             <groupId>io.github.mjourard</groupId>
             <artifactId>env-file-maven-plugin</artifactId>
@@ -81,6 +80,22 @@
             <artifactId>jjwt-jackson</artifactId>
             <version>0.12.5</version>
             <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.google.cloud</groupId>
+            <artifactId>google-cloud-storage</artifactId>
+            <version>2.40.1</version>
+        </dependency>
+        <dependency>
+            <groupId>com.google.cloud</groupId>
+            <artifactId>spring-cloud-gcp-dependencies</artifactId>
+            <version>5.4.1</version>
+            <type>pom</type>
+        </dependency>
+        <dependency>
+            <groupId>com.google.auth</groupId>
+            <artifactId>google-auth-library-oauth2-http</artifactId>
+            <version>1.23.0</version>
         </dependency>
     </dependencies>
 
