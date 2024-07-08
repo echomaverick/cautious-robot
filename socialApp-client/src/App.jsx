@@ -14,6 +14,7 @@ import UserDetails from "./components/UserDetails";
 import NotFound from "./components/NotFound";
 import SavedPosts from "./components/SavedPosts";
 import PremiumPage from "./components/PremiumPage";
+import UserCard from "./components/MessageUserCard";
 
 const App = () => {
   const isAuthenticated = () => {
@@ -65,6 +66,16 @@ const App = () => {
             element={
               isAuthenticated() ? (
                 <SavedPosts />
+              ) : (
+                <Navigate to="/login" replace />
+              )
+            }
+          />
+          <Route
+            path="/messages"
+            element={
+              isAuthenticated() ? (
+                <UserCard />
               ) : (
                 <Navigate to="/login" replace />
               )
