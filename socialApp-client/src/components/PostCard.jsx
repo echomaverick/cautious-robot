@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
+import { format } from "date-fns";
 import { IoMdHeartEmpty, IoMdHeart } from "react-icons/io";
 import { AiOutlineComment, AiOutlineShareAlt } from "react-icons/ai";
 import { MdOutlineAddComment } from "react-icons/md";
@@ -70,6 +71,11 @@ const PostCard = ({ id, title, content, postDate, userId }) => {
 
     fetchLikedPosts();
   }, [id]);
+
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    return format(date, "PPpp");
+  };
 
   useEffect(() => {
     const fetchPostDetails = async () => {
@@ -268,7 +274,6 @@ const PostCard = ({ id, title, content, postDate, userId }) => {
       navigate(`/users/${userId}`);
     }
   };
-
   return (
     <div className="post-card">
       <div className="post-header">
@@ -328,7 +333,9 @@ const PostCard = ({ id, title, content, postDate, userId }) => {
                   <strong className="user-ide">@{comment.userId}</strong>
                   <p className="user-comment">{comment.content}</p>
                   <small className="small-timer">
-                    {formatDate(comment.commentDate)}
+                    {isValidDate(comment.commentDate)
+                      ? formatDate(comment.commentDate)
+                      : "N/A"}
                   </small>
                 </li>
               ))}
