@@ -1,11 +1,18 @@
-/* user-cards.css */
 .user-card {
-  background-color: #f0f0f0;
-  border: 1px solid #ccc;
+  background-color: white;
+  border: 0.1em solid lightgrey;
   padding: 20px;
   margin-bottom: 20px;
-  border-radius: 8px;
+  flex: 1;
+  max-width: 50%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  overflow-y: auto;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  z-index: 1;
+  width: 300px;
 }
 
 .user-card h3 {
@@ -25,10 +32,27 @@
 .followers-list li {
   list-style-type: none;
   margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
 
 .message-container {
-  margin-top: 20px;
+  position: fixed;
+  top: 0;
+  right: 100%;
+  width: 50%;
+  height: 100vh;
+  background-color: #fff;
+  box-shadow: -4px 0 8px rgba(0, 0, 0, 0.1);
+  transition: right 0.3s ease;
+  padding: 20px;
+  z-index: 0;
+  width: 363px;
+}
+
+.message-container.open {
+  right: 0;
 }
 
 .message-input {
@@ -39,13 +63,21 @@
 }
 
 .sheno {
-  margin-top: 10px;
-  padding: 8px 16px;
-  background-color: #007bff;
-  color: #fff;
-  border: none;
+  width: 100px;
+  background: none;
+  color: black;
   cursor: pointer;
-  font-size: 14px;
-  width: 300px;
-  border-radius: 4px;
+  padding: 3px 30px;
+}
+
+.message-list {
+  overflow-y: auto;
+  height: calc(100% - 60px);
+}
+
+.message-input-container {
+  position: absolute;
+  bottom: 20px;
+  left: 20px;
+  right: 20px;
 }

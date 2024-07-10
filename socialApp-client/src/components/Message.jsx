@@ -1,25 +1,24 @@
 import React, { useEffect, useRef, useState } from "react";
 import axios from "axios";
+import "../styles/user-cards.css";
 
 const MessageComponent = ({ senderId, receiverId }) => {
   const [messages, setMessages] = useState([]);
   const [messageInput, setMessageInput] = useState("");
-  const [isTyping, setIsTyping] = useState(false);
   const ws = useRef(null);
+
+  const apiUrl = import.meta.env.VITE_API_BASE_URL;
+  const wsBaseUrl = import.meta.env.VITE_WS_BASE_URL;
 
   useEffect(() => {
     // WebSocket setup
-    ws.current = new WebSocket(
-      `ws://localhost:5130/ws/chat/${senderId}/${receiverId}`
-    );
+    ws.current = new WebSocket(`${wsBaseUrl}/${senderId}/${receiverId}`);
     ws.current.onopen = () => console.log("WebSocket connected");
     ws.current.onclose = () => console.log("WebSocket disconnected");
 
-    // WebSocket message handler
     ws.current.onmessage = (event) => {
       const message = JSON.parse(event.data);
       setMessages((prevMessages) => [...prevMessages, message]);
-      setIsTyping(false); // Assuming you don't need typing indicator from WebSocket
     };
 
     return () => {
@@ -27,7 +26,6 @@ const MessageComponent = ({ senderId, receiverId }) => {
     };
   }, [senderId, receiverId]);
 
-  // Function to send a message
   const sendMessage = () => {
     if (!messageInput.trim()) return;
 
@@ -37,18 +35,12 @@ const MessageComponent = ({ senderId, receiverId }) => {
       message: messageInput.trim(),
     };
 
-    // Sending message via WebSocket
     ws.current.send(JSON.stringify(messageData));
 
-    // Posting message to API
     axios
-      .post(
-        `http://localhost:8080/api/message/${senderId}/${receiverId}`,
-        messageData
-      )
+      .post(`${apiUrl}/message/${senderId}/${receiverId}`, messageData)
       .then((response) => {
         console.log("Message sent:", response.data);
-        // Optionally, update UI with sent message if needed
         setMessages((prevMessages) => [...prevMessages, response.data]);
       })
       .catch((error) => {
@@ -59,26 +51,23 @@ const MessageComponent = ({ senderId, receiverId }) => {
   };
 
   return (
-    <div>
-      <div>
-        {/* Render messages */}
+    <div className="message-component">
+      <div className="message-list">
         {messages.map((msg, index) => (
-          <div key={index}>
-            <strong>{msg.sender_id}: </strong>
+          <div
+            key={index}
+            className={`message-item ${
+              msg.sender_id === senderId ? "sent" : "received"
+            }`}
+          >
             {msg.message}
           </div>
         ))}
-        {/* Typing indicator */}
-        {isTyping && (
-          <div>
-            <em>{receiverId} is typing...</em>
-          </div>
-        )}
       </div>
-      {/* Message input and send button */}
-      <div>
+      <div className="message-input-container">
         <input
           type="text"
+          className="message-input"
           value={messageInput}
           onChange={(e) => setMessageInput(e.target.value)}
           placeholder="Type a message..."

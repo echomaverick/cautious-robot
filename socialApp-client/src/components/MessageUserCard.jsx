@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import MessageComponent from "../components/Message";
+import { MdMessage } from "react-icons/md";
 import "../styles/user-cards.css";
 
 const UserCard = ({ user }) => {
@@ -8,6 +9,8 @@ const UserCard = ({ user }) => {
   const [receiverId, setReceiverId] = useState(null);
   const [followers, setFollowers] = useState([]);
   const [selectedUser, setSelectedUser] = useState(null);
+
+  const apiUrl = import.meta.env.VITE_API_BASE_URL;
 
   useEffect(() => {
     const fetchFollowers = async () => {
@@ -18,10 +21,19 @@ const UserCard = ({ user }) => {
       }
 
       try {
-        const response = await axios.get(
-          `http://localhost:8080/api/users/${userId}/followers`
+        const response = await axios.get(`${apiUrl}/users/list/${userId}`);
+        const followerIds = response.data.followerId;
+
+        const followersData = await Promise.all(
+          followerIds.map(async (followerId) => {
+            const followerResponse = await axios.get(
+              `${apiUrl}/users/${followerId}`
+            );
+            return followerResponse.data;
+          })
         );
-        setFollowers(response.data);
+
+        setFollowers(followersData);
       } catch (error) {
         console.error("Error fetching followers:", error);
       }
@@ -30,21 +42,16 @@ const UserCard = ({ user }) => {
     fetchFollowers();
   }, [user]);
 
-  const fetchUserDetails = async (followerId) => {
-    try {
-      const response = await axios.get(
-        `http://localhost:8080/api/users/${followerId}`
-      );
-      setSelectedUser(response.data);
-    } catch (error) {
-      console.error("Error fetching user details:", error);
+  const handleMessageClick = (follower) => {
+    if (showMessageComponent && receiverId === follower.id) {
+      setShowMessageComponent(false);
+      setReceiverId(null);
+      setSelectedUser(null);
+    } else {
+      setReceiverId(follower.id);
+      setSelectedUser(follower);
+      setShowMessageComponent(true);
     }
-  };
-
-  const handleMessageClick = (followerId) => {
-    setReceiverId(followerId);
-    fetchUserDetails(followerId);
-    setShowMessageComponent(true);
   };
 
   const getUserIdFromToken = () => {
@@ -62,34 +69,37 @@ const UserCard = ({ user }) => {
   };
 
   return (
-    <div style={{ marginTop: 10 }}>
-      <h4>Followers</h4>
+    <div style={{ display: "flex", position: "relative" }}>
       <div className="user-card">
+        <h4>Followers</h4>
         {user?.username && <h3>{user.username}</h3>}
         {user?.email && <p>Email: {user.email}</p>}
         {followers.length > 0 && (
           <div className="followers-list">
             <ul>
               {followers.map((follower) => (
-                <li key={follower}>
+                <li key={follower.id}>
+                  {follower.username}
                   <button
                     className="sheno"
                     onClick={() => handleMessageClick(follower)}
                   >
-                    {follower} Message
+                    <MdMessage />
                   </button>
                 </li>
               ))}
             </ul>
           </div>
         )}
+      </div>
+      <div
+        className={`message-container ${showMessageComponent ? "open" : ""}`}
+      >
         {showMessageComponent && receiverId && selectedUser && (
-          <div className="message-container">
-            <MessageComponent
-              senderId={getUserIdFromToken()}
-              receiverId={receiverId}
-            />
-          </div>
+          <MessageComponent
+            senderId={getUserIdFromToken()}
+            receiverId={receiverId}
+          />
         )}
       </div>
     </div>
