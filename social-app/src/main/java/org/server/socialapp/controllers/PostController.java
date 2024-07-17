@@ -15,9 +15,10 @@ public class PostController {
 	private PostService postService;
 
 	@PostMapping("/create/{username}")
-	public Post create(@PathVariable String username , @RequestBody Post post) {
+	public String create(@PathVariable String username , @RequestBody Post post) throws Exception {
 		System.out.println("Post creating for username: " + username);
-		return postService.createPost(username , post);
+		postService.createPost(username , post);
+		return "Post created successfully";
 	}
 
 	@GetMapping("/list/{userId}")
@@ -29,6 +30,7 @@ public class PostController {
 	public List<Post> getAllPosts() {
 		return postService.getAllDBPosts();
 	}
+
 	@GetMapping("/{postId}")
 	public Post getPost(@PathVariable String postId) {
 		return postService.getPostById(postId);

@@ -30,6 +30,7 @@ const PostForm = () => {
     const postData = {
       title: postTitle,
       content: postContent,
+      postDate: new Date().toISOString(),
     };
 
     try {
@@ -37,6 +38,13 @@ const PostForm = () => {
         `${apiUrl}/posts/create/${username}`,
         postData
       );
+
+      if (response.status === 200) {
+        alert("Post created successfully!");
+        localStorage.removeItem("cachedPosts");
+        window.location.reload(); 
+      }
+
       setPostTitle("");
       setPostContent("");
     } catch (error) {
