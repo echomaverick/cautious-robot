@@ -128,6 +128,10 @@ const PostCard = ({ id, title, content, postDate, postTime, userId }) => {
     setShowNewCommentForm(!showNewCommentForm);
   };
 
+  useEffect(() => {
+    fetchPostDetails();
+  }, [id]);
+
   const handleCommentChange = (e) => {
     setNewComment(e.target.value);
   };
@@ -275,6 +279,11 @@ const PostCard = ({ id, title, content, postDate, postTime, userId }) => {
     const [hours, minutes] = timeString.split(":");
     return `${hours}:${minutes}`;
   };
+
+  const isValidDate = (date) => {
+    return !isNaN(Date.parse(date));
+  };
+  
   return (
     <div className="post-card">
       <div className="post-header">
@@ -318,7 +327,7 @@ const PostCard = ({ id, title, content, postDate, postTime, userId }) => {
                 className="add-comment-button"
                 onClick={toggleNewCommentForm}
               >
-                <MdOutlineAddComment /> Add
+                <MdOutlineAddComment />
               </button>
             </h3>
             <ul className="comment-list">
@@ -337,7 +346,9 @@ const PostCard = ({ id, title, content, postDate, postTime, userId }) => {
                   <p className="user-comment">{comment.content}</p>
                   <small className="small-timer">
                     {isValidDate(comment.commentDate)
-                      ? formatDate(comment.commentDate)
+                      ? `${formatDate(comment.commentDate)} at ${formatTime(
+                          comment.commentTime
+                        )}`
                       : "N/A"}
                   </small>
                 </li>

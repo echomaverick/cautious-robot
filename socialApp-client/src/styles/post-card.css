@@ -4,9 +4,9 @@
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   padding: 20px;
   margin-bottom: 20px;
-  margin: 20px 250px;
+  margin: 20px auto;
   position: relative;
-  max-width: 600px;
+  max-width: 800px;
   cursor: pointer;
 }
 
@@ -121,6 +121,7 @@
 .comment-title {
   display: flex;
   font-size: 15px;
+  margin-left: 13px;
 }
 
 .post-date {
@@ -159,14 +160,9 @@
 .add-comment-button {
   background-color: transparent;
   color: black;
-  margin-left: 250px;
   margin-top: -11px;
-}
-
-.add-comment-button:hover {
-  background-color: black;
-  color: white;
-  transition: 0.3s ease-in;
+  width: 100px;
+  margin-left: 580px;
 }
 
 .post-comment-button {
@@ -175,6 +171,8 @@
   margin-left: 10px;
   gap: 5px;
   height: 50px;
+  width: 100px;
+  align-items: center;
 }
 
 .new-comment-form {
@@ -186,7 +184,6 @@
 
 .new-comment-form textarea {
   width: 100%;
-  height: 100px;
   resize: vertical;
   padding: 10px;
   border: 0.5px solid lightgrey;
@@ -194,12 +191,6 @@
   font-size: 15px;
   border-radius: 3px;
   scrollbar-highlight-color: #888;
-}
-
-.post-comment-button:hover {
-  background-color: black;
-  color: white;
-  transition: 0.5s ease-in-out;
 }
 
 .error-message {
@@ -210,7 +201,8 @@
 
 @media (max-width: 1024px) {
   .post-card {
-    width: 75%;
+    width: 77%;
+    position: fixed;
   }
   .error-message {
     margin-left: 50px;
@@ -236,9 +228,10 @@
 
 @media (max-width: 768px) {
   .post-card {
-    width: 75%;
+    width: 77.5%;
     margin: 10px 70px;
     padding: 15px;
+    position: fixed;
   }
   .error-message {
     margin-left: 50px;
