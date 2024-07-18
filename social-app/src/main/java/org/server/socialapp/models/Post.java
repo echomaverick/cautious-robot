@@ -3,7 +3,8 @@ package org.server.socialapp.models;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -17,17 +18,15 @@ public class Post {
 	private String userId;
 	private String content;
 	private List<Comments> commentsList = new ArrayList<>();
-	private String username;
-	private LocalDateTime postDate;
+    private String postDate;
+	private String postTime;
 
-
-	public Post(String id , String title , String content , String username) {
+	public Post(String title , String content) {
 		this.id = UUID.randomUUID().toString();
 		this.title = title;
 		this.content = content;
-		this.username = username;
-		this.userId = userId;
-		this.postDate = LocalDateTime.now();
+		this.postDate = LocalDate.now().toString();
+		this.postTime = LocalTime.now().toString();
 	}
 
 	public String getUserId() {
@@ -70,19 +69,18 @@ public class Post {
 		this.commentsList = commentsList;
 	}
 
-	public String getUsername() {
-		return username;
-	}
-
-	public void setUsername(String username) {
-		this.username = username;
-	}
-
-	public LocalDateTime getPostDate() {
+	public String getPostDate() {
 		return postDate;
 	}
 
-	public void setPostDate(LocalDateTime postDate) {
+	public void setPostDate(String postDate) {
 		this.postDate = postDate;
+	}
+
+	public String getPostTime() {
+		return postTime;
+	}
+	public void setPostTime(String postTime) {
+		this.postTime = postTime;
 	}
 }

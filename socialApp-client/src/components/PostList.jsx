@@ -86,6 +86,17 @@ const PostList = () => {
     );
   }
 
+  if (posts.length === 0) {
+    return (
+      <div
+        className="no-posts-message"
+        style={{ textAlign: "center", marginTop: "20px" }}
+      >
+        <p>No more posts.</p>
+      </div>
+    );
+  }
+
   return (
     <div className="post-list">
       {posts.map((post) => (
@@ -96,6 +107,7 @@ const PostList = () => {
           content={post.content}
           commentsList={post.commentsList}
           postDate={post.postDate}
+          postTime={post.postTime}
           userId={post.userId}
         />
       ))}

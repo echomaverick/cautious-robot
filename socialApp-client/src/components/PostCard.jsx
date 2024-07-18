@@ -16,7 +16,7 @@ import xIcon from "/home/samuel/Documents/GitHub/cautious-robot/socialApp-client
 import facebookIcon from "/home/samuel/Documents/GitHub/cautious-robot/socialApp-client/src/assets/facebook.png";
 import "../styles/post-card.css";
 
-const PostCard = ({ id, title, content, postDate, userId }) => {
+const PostCard = ({ id, title, content, postDate, postTime, userId }) => {
   const [expanded, setExpanded] = useState(false);
   const [showNewCommentForm, setShowNewCommentForm] = useState(false);
   const [newComment, setNewComment] = useState("");
@@ -72,27 +72,25 @@ const PostCard = ({ id, title, content, postDate, userId }) => {
     fetchLikedPosts();
   }, [id]);
 
-  const formatDate = (dateString) => {
-    const date = new Date(dateString);
-    return format(date, "PPpp");
-  };
+  const fetchPostDetails = async () => {
+    try {
+      const response = await axios.get(`${apiUrl}/posts/${id}`);
+      console.log("Post details response:", response.data);
 
-  useEffect(() => {
-    const fetchPostDetails = async () => {
-      try {
-        const response = await axios.get(`${apiUrl}/posts/${id}`);
-        if (response.status === 200) {
-          const { commentsList } = response.data;
+      if (response.status === 200) {
+        const { commentsList } = response.data;
+        if (commentsList) {
           setCommentsList(commentsList);
-          setCommentCount(commentsList.length);
+          setCommentCount(commentsList.length || 0);
+        } else {
+          setCommentsList([]);
+          setCommentCount(0);
         }
-      } catch (error) {
-        console.error("Error fetching post details:", error.message);
       }
-    };
-
-    fetchPostDetails();
-  }, [id]);
+    } catch (error) {
+      console.error("Error fetching post details:", error.message);
+    }
+  };
 
   useEffect(() => {
     const fetchSavedPosts = async () => {
@@ -233,14 +231,6 @@ const PostCard = ({ id, title, content, postDate, userId }) => {
     }
   };
 
-  const isValidDate = (date) => {
-    return !isNaN(Date.parse(date));
-  };
-
-  const formattedDate = isValidDate(postDate)
-    ? format(new Date(postDate), "PPpp")
-    : "N/A";
-
   const handleShowModal = () => setShowModal(true);
   const handleCloseModal = () => setShowModal(false);
 
@@ -274,6 +264,17 @@ const PostCard = ({ id, title, content, postDate, userId }) => {
       navigate(`/users/${userId}`);
     }
   };
+
+  const formatDate = (postDate) => {
+    const date = new Date(postDate);
+    return format(date, "MMM dd, yyyy");
+  };
+
+  const formatTime = (postTime) => {
+    const [timeString] = postTime.split(".");
+    const [hours, minutes] = timeString.split(":");
+    return `${hours}:${minutes}`;
+  };
   return (
     <div className="post-card">
       <div className="post-header">
@@ -305,7 +306,9 @@ const PostCard = ({ id, title, content, postDate, userId }) => {
             <IoBookmarkOutline className="icon" onClick={toggleSave} />
           )}
           <AiOutlineShareAlt className="icon" onClick={handleShowShareModal} />
-          {postDate && <div className="post-date">{formattedDate}</div>}
+          <div className="post-date">
+            {formatDate(postDate)} &bull; {formatTime(postTime)}
+          </div>
         </div>
         {expanded && (
           <div className="post-comments">
@@ -417,6 +420,7 @@ PostCard.propTypes = {
   title: PropTypes.string.isRequired,
   content: PropTypes.string.isRequired,
   postDate: PropTypes.string.isRequired,
+  postTime: PropTypes.string.isRequired,
   userId: PropTypes.string.isRequired,
 };
 

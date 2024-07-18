@@ -8,12 +8,12 @@ import { IoBookmarkOutline } from "react-icons/io5";
 import { AiOutlineMessage } from "react-icons/ai";
 import { TbPremiumRights } from "react-icons/tb";
 import { CiLogout } from "react-icons/ci";
-import { GiFeatheredWing } from "react-icons/gi";
 import { CiSearch } from "react-icons/ci";
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import Form from "react-bootstrap/Form";
 import loaderImage from "/home/samuel/Documents/GitHub/cautious-robot/socialApp-client/src/assets/mona-loading-dark-7701a7b97370.gif";
+import image from "../assets/ri.gif";
 import "../styles/history.css";
 
 const ChatHistory = () => {
@@ -134,7 +134,7 @@ const ChatHistory = () => {
             style={{ fontSize: 30, marginTop: 25 }}
             href="/home"
           >
-            <GiFeatheredWing style={{ color: "black" }} />
+            <img src={image} alt="" className="test-image" />
           </a>
           <div className="history-links">
             <a href="/home" className="history-link">
@@ -147,7 +147,7 @@ const ChatHistory = () => {
             </a>
             <a className="history-link" onClick={handleShowModal}>
               <CiSearch className="icon" />
-              <span>Search</span>
+              <span style={{ cursor: "pointer" }}>Search</span>
             </a>
             <a href="/bookmarks" className="history-link">
               <IoBookmarkOutline className="icon" />

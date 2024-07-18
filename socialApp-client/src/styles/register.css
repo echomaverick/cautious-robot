@@ -7,6 +7,7 @@
   margin-top: 150px;
   border: 0.5px solid lightgray;
   margin-right: 10px;
+  margin-bottom: 10px;
 }
 .regTitle {
   color: black;
@@ -70,6 +71,7 @@ img.hello-image {
 
   .container-sign {
     margin-top: 10px;
+    margin-bottom: 10px;
   }
 }
 
@@ -88,5 +90,6 @@ img.hello-image {
   .container-sign {
     margin-top: 20px;
     margin-left: 10px;
+    margin-bottom: 10px;
   }
 }

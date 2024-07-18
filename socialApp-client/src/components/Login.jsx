@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import image from "../assets/ri.gif";
 import "../styles/login.css";
-import image from "../assets/hello.svg";
-import { GiFeatheredWing } from "react-icons/gi";
 
 const LoginScript = () => {
   const navigate = useNavigate();
@@ -69,14 +68,6 @@ const LoginScript = () => {
           <img src={image} alt="" className="hello-image" />
         </div>
         <div className="container-sign">
-          <h1 className="login">
-            <GiFeatheredWing style={{ color: "black" }} />
-          </h1>
-          <p className="fill">
-            Please fill in this form to login to your account.
-          </p>
-          <hr />
-
           {error && <p className="error-message">{error}</p>}
 
           <label htmlFor="username">

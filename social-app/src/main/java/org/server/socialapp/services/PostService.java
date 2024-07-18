@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -27,10 +28,12 @@ public class PostService {
 			throw new IllegalArgumentException("User not found");
 		}
 		post.setUserId(user.getId());
+		post.setPostDate(LocalDate.now().toString());
 
+		logger.info("Saving post with date: {}" , post.getPostDate());
 		Post savedPost = postRepository.save(post);
 
-		logger.info("Post created with ID: {}" , savedPost);
+		logger.info("Post created with ID: {} and date: {}" , savedPost.getId() , savedPost.getPostDate());
 		return post;
 	}
 
@@ -39,8 +42,11 @@ public class PostService {
 	}
 
 	public List<Post> getAllDBPosts() {
-		return postRepository.findAll();
+		List<Post> posts = postRepository.findAll();
+		posts.forEach(post -> logger.info("Fetched post with date: {}" , post.getPostDate()));
+		return posts;
 	}
+
 	public Post getPostById(String postId) {
 		return postRepository.findById(postId).orElse(null);
 	}

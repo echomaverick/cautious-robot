@@ -30,7 +30,6 @@ const PostForm = () => {
     const postData = {
       title: postTitle,
       content: postContent,
-      postDate: new Date().toISOString(),
     };
 
     try {
@@ -42,7 +41,7 @@ const PostForm = () => {
       if (response.status === 200) {
         alert("Post created successfully!");
         localStorage.removeItem("cachedPosts");
-        window.location.reload(); 
+        window.location.reload();
       }
 
       setPostTitle("");
