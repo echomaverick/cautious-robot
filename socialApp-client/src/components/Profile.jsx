@@ -6,6 +6,7 @@ import ChatHistory from "./ChatHistory";
 import ProfileHeader from "./ProfileHeader";
 import loaderImage from "/home/samuel/Documents/GitHub/cautious-robot/socialApp-client/src/assets/mona-loading-dark-7701a7b97370.gif";
 import "../styles/profile.css";
+import { useNavigate } from "react-router-dom";
 
 export const ProfileContext = createContext(null);
 
@@ -16,8 +17,31 @@ const Profile = () => {
   const [postsCount, setPostsCount] = useState(0);
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
+  const navigate = useNavigate();
 
   const apiUrl = import.meta.env.VITE_API_BASE_URL;
+
+  const isAuthenticated = () => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      try {
+        const decodedToken = JSON.parse(atob(token.split(".")[1]));
+        const expirationTime = decodedToken.exp * 1000;
+        return Date.now() < expirationTime;
+      } catch (error) {
+        console.error("Error decoding token: ", error.message);
+        return false;
+      }
+    } else {
+      return false;
+    }
+  };
+
+  useEffect(() => {
+    if (!isAuthenticated()) {
+      navigate("/login");
+    }
+  }, [navigate]);
 
   useEffect(() => {
     const timer = setTimeout(() => {

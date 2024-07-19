@@ -14,11 +14,12 @@ public class Like {
 	private List<String> postId = new ArrayList<>();
 	private List<String> commentId = new ArrayList<>();
 
-	public Like() {}
+	public Like() {
+	}
 
-    public Like(String userId) {
-        this.userId = userId;
-    }
+	public Like(String userId) {
+		this.userId = userId;
+	}
 
 	public String getId() {
 		return id;

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import { Col, Row, Image } from "react-bootstrap";
 import ChatHistory from "./ChatHistory";
@@ -13,8 +13,31 @@ const UserDetail = () => {
   const [error, setError] = useState(null);
   const [followersCount, setFollowersCount] = useState(0);
   const [followingCount, setFollowingCount] = useState(0);
+  const navigate = useNavigate();
 
   const apiUrl = import.meta.env.VITE_API_BASE_URL;
+
+  const isAuthenticated = () => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      try {
+        const decodedToken = JSON.parse(atob(token.split(".")[1]));
+        const expirationTime = decodedToken.exp * 1000;
+        return Date.now() < expirationTime;
+      } catch (error) {
+        console.error("Error decoding token: ", error.message);
+        return false;
+      }
+    } else {
+      return false;
+    }
+  };
+
+  useEffect(() => {
+    if (!isAuthenticated()) {
+      navigate("/login");
+    }
+  }, [navigate]);
 
   useEffect(() => {
     fetchUserDetails();
@@ -119,15 +142,10 @@ const UserDetail = () => {
             <br />
             <br />
             <div>
-              <p
-                style={{fontWeight: "bold" }}
-                className="use-title"
-              >
+              <p style={{ fontWeight: "bold" }} className="use-title">
                 {user.title}
               </p>
-              <p className="user-bio">
-                {user.bio}
-              </p>
+              <p className="user-bio">{user.bio}</p>
               <div className="use-links">
                 {user.links.map((link, index) => (
                   <a

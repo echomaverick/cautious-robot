@@ -25,9 +25,9 @@ public class LikesController {
 	}
 
 	@GetMapping("/post/{postId}")
-    public int getLikesCountForPost(@PathVariable String postId) {
-        return likesService.getLikesCountForPost(postId);
-    }
+	public int getLikesCountForPost(@PathVariable String postId) {
+		return likesService.getLikesCountForPost(postId);
+	}
 
 	@GetMapping("/comment/{commentId}")
 	public List<Like> getLikesForComment(@PathVariable String commentId) {

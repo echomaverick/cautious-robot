@@ -8,6 +8,5 @@ import java.util.List;
 
 @Repository
 public interface ConversationRepository extends MongoRepository<Conversation, String> {
-
 	Conversation findByParticipants(List<String> participants);
 }

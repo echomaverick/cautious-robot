@@ -20,9 +20,9 @@ public class UserController {
 
 	@GetMapping("/info/{username}")
 	public User getUserInfo(@PathVariable String username) {
-		System.out.println("User getting information: " + username);
 		return userService.getUserInfo(username);
 	}
+
 	@GetMapping("/{userId}")
 	public User getUserInfoById(@PathVariable String userId) {
 		System.out.println("User getting information: " + userId);

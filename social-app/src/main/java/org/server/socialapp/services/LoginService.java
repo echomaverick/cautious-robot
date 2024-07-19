@@ -1,5 +1,8 @@
 package org.server.socialapp.services;
 
+import org.server.socialapp.exceptions.BadRequestException;
+import org.server.socialapp.exceptions.InternalServerErrorException;
+import org.server.socialapp.exceptions.NotFoundException;
 import org.server.socialapp.models.User;
 import org.server.socialapp.repositories.UserRepository;
 import org.server.socialapp.util.JwtTokenUtil;
@@ -23,16 +26,32 @@ public class LoginService {
 	@Autowired
 	private JwtTokenUtil jwtTokenUtil;
 
-	public String login(String username, String password) {
-		logger.info("Attempting to login with username {} and password {}", username, password);
-		User user = userRepository.findByUsername(username);
-		if(user!=null && passwordEncoder.matches(password, user.getPassword())) {
-			String token = jwtTokenUtil.generateToken(username, user.getId());
-			logger.info("Successfully logged in {}", username);
+	public String login(String username , String password) {
+		try {
+			logger.info("Attempting to login with username {}" , username);
+
+			User user = userRepository.findByUsername(username);
+			if (user == null) {
+				logger.warn("User with username: {} not found" , username);
+				throw new NotFoundException("Username not found");
+			}
+
+			if (!passwordEncoder.matches(password , user.getPassword())) {
+				logger.warn("Password mismatch for username: {}" , username);
+				throw new BadRequestException("Invalid username or password");
+			}
+
+			String token = jwtTokenUtil.generateToken(username , user.getId());
+			logger.info("Successfully logged in user: {}" , username);
 			return token;
-		}else{
-			logger.error("Username {} does not exist", username);
-			throw new IllegalArgumentException("Invalid username or password");
+
+		} catch (NotFoundException | BadRequestException e) {
+			logger.error("Error during login: {}" , e.getMessage());
+			throw e;
+
+		} catch (Exception e) {
+			logger.error("Unexpected error occurred during login: {}" , e.getMessage());
+			throw new InternalServerErrorException("Error during login");
 		}
 	}
 }

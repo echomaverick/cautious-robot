@@ -1,11 +1,9 @@
 package org.server.socialapp.models;
 
-import org.springframework.cglib.core.Local;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.UUID;
 
@@ -62,6 +60,7 @@ public class Comments {
 	public String getCommentTime() {
 		return commentTime;
 	}
+
 	public void setCommentTime(String commentTime) {
 		this.commentTime = commentTime;
 	}

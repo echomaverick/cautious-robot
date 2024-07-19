@@ -35,6 +35,28 @@ const PostCard = ({ id, title, content, postDate, postTime, userId }) => {
   const apiUrl = import.meta.env.VITE_API_BASE_URL;
   const navigate = useNavigate();
 
+  const isAuthenticated = () => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      try {
+        const decodedToken = JSON.parse(atob(token.split(".")[1]));
+        const expirationTime = decodedToken.exp * 1000;
+        return Date.now() < expirationTime;
+      } catch (error) {
+        console.error("Error decoding token: ", error.message);
+        return false;
+      }
+    } else {
+      return false;
+    }
+  };
+
+  useEffect(() => {
+    if (!isAuthenticated()) {
+      navigate("/login");
+    }
+  }, [navigate]);
+
   // Fetches the user details based on the userId from the API.
   useEffect(() => {
     const fetchUserDetails = async () => {

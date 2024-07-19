@@ -1,5 +1,7 @@
 package org.server.socialapp.services;
 
+import org.server.socialapp.exceptions.BadRequestException;
+import org.server.socialapp.exceptions.InternalServerErrorException;
 import org.server.socialapp.models.User;
 import org.server.socialapp.repositories.UserRepository;
 import org.slf4j.Logger;
@@ -23,34 +25,57 @@ public class UserService {
 	private PasswordEncoder passwordEncoder;
 
 	public User createUser(User user) {
-		if (!isValidEmail(user.getEmail())) {
-			throw new IllegalArgumentException("Invalid email format");
+		try {
+			if (!isValidEmail(user.getEmail())) {
+				throw new BadRequestException("Invalid email format");
+			}
+			if (userRepository.existsByEmail(user.getEmail())) {
+				throw new BadRequestException("Email already exists");
+			}
+			if (userRepository.existsByUsername(user.getUsername())) {
+				throw new BadRequestException("Username already exists");
+			}
+			if (!isValidLength(user.getName())) {
+				throw new BadRequestException("Name should be at least 2 characters long");
+			}
+			if (!isValidPassword(user.getPassword())) {
+				throw new BadRequestException("Password should be at least 8 characters long, including one letter, one symbol, and one number");
+			}
+
+			user.setPassword(passwordEncoder.encode(user.getPassword()));
+			if (user.getRole() == null) {
+				user.setRole("simple_account");
+			}
+
+			logger.info("Creating user: {}" , user.getUsername());
+			return userRepository.save(user);
+
+		} catch (IllegalArgumentException e) {
+			logger.error("Error creating user: {}" , e.getMessage());
+			throw e;
+
+		} catch (Exception e) {
+			logger.error("Unexpected error occurred while creating user: {}" , e.getMessage());
+			throw new InternalServerErrorException("Error creating user");
 		}
-		if (userRepository.existsByEmail(user.getEmail())) {
-			throw new IllegalArgumentException("Email already exists");
-		}
-		if (userRepository.existsByUsername(user.getUsername())) {
-			throw new IllegalArgumentException("Username already exists");
-		}
-		if (!isValidLength(user.getName())) {
-			throw new IllegalArgumentException("Name should be at least 2 characters long");
-		}
-		if (!isValidPassword(user.getPassword())) {
-			throw new IllegalArgumentException("Password should be at least 8 characters long, including one letter, one symbol, and one number");
-		}
-		user.setPassword(passwordEncoder.encode(user.getPassword()));
-		if (user.getRole() == null) {
-			user.setRole("simple_account");
-		}
-		logger.info("Creating user: {}" , user.getUsername());
-		return userRepository.save(user);
 	}
 
-	public User getUserInfo(String username){
-		return userRepository.findByUsername(username);
+	public User getUserInfo(String username) {
+		try {
+			return userRepository.findByUsername(username);
+		} catch (Exception e) {
+			logger.error("Error retrieving user info for username {}: {}" , username , e.getMessage());
+			throw new InternalServerErrorException("Error retrieving user info");
+		}
 	}
-	public User getUserInfoById(String id){
-		return userRepository.findUserById(id);
+
+	public User getUserInfoById(String id) {
+		try {
+			return userRepository.findUserById(id);
+		} catch (Exception e) {
+			logger.error("Error retrieving user info for ID {}: {}" , id , e.getMessage());
+			throw new InternalServerErrorException("Error retrieving user info by ID");
+		}
 	}
 
 	private boolean isValidEmail(String email) {

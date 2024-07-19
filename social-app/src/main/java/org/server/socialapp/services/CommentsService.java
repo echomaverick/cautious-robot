@@ -1,5 +1,7 @@
 package org.server.socialapp.services;
 
+import org.server.socialapp.exceptions.InternalServerErrorException;
+import org.server.socialapp.exceptions.NotFoundException;
 import org.server.socialapp.models.Comments;
 import org.server.socialapp.models.Post;
 import org.server.socialapp.models.User;
@@ -26,22 +28,34 @@ public class CommentsService {
 
 	@Transactional
 	public Comments createComment(String userId , String postId , Comments comment) {
-		Optional<User> userOptional = userRepository.findById(userId);
-		if (userOptional.isEmpty()) {
-			throw new IllegalArgumentException("User not found with userId: " + userId);
+		try {
+			Optional<User> userOptional = userRepository.findById(userId);
+			if (userOptional.isEmpty()) {
+				logger.warn("User not found with userId: {}" , userId);
+				throw new NotFoundException("User not found with userId: " + userId);
+			}
+
+			User user = userOptional.get();
+
+			Post post = postRepository.findById(postId)
+					.orElseThrow(() -> {
+						logger.warn("Post not found with ID: {}" , postId);
+						return new NotFoundException("Post not found with ID: " + postId);
+					});
+
+			comment.setUserId(user.getId());
+			post.getCommentsList().add(comment);
+
+			postRepository.save(post);
+
+			logger.info("Comment created with ID: {}" , comment.getId());
+			return comment;
+		} catch (NotFoundException e) {
+			logger.error("Error creating comment: {}" , e.getMessage() , e);
+			throw e;
+		} catch (Exception e) {
+			logger.error("Unexpected error while creating comment. Error: {}" , e.getMessage() , e);
+			throw new InternalServerErrorException("An unexpected error occurred while creating the comment");
 		}
-
-		User user = userOptional.get();
-
-		Post post = postRepository.findById(postId)
-				.orElseThrow(() -> new IllegalArgumentException("Post not found with ID: " + postId));
-
-		comment.setUserId(user.getId());
-		post.getCommentsList().add(comment);
-
-		postRepository.save(post);
-
-		logger.info("Comment created with ID: {}" , comment.getId());
-		return comment;
 	}
 }

@@ -1,5 +1,6 @@
 package org.server.socialapp.services;
 
+import org.server.socialapp.exceptions.InternalServerErrorException;
 import org.server.socialapp.models.ImagesCollection;
 import org.server.socialapp.repositories.ImageRepository;
 import org.slf4j.Logger;
@@ -24,7 +25,7 @@ public class ImageService {
 			return savedCollection;
 		} catch (Exception e) {
 			logger.error("Failed to save ImagesCollection: {}" , e.getMessage());
-			throw new RuntimeException("Failed to save ImagesCollection" , e);
+			throw new InternalServerErrorException("Failed to save ImagesCollection");
 		}
 	}
 }

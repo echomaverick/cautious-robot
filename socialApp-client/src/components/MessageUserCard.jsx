@@ -3,14 +3,38 @@ import axios from "axios";
 import MessageComponent from "../components/Message";
 import { MdMessage } from "react-icons/md";
 import "../styles/user-cards.css";
+import { useNavigate } from "react-router-dom";
 
 const UserCard = ({ user }) => {
   const [showMessageComponent, setShowMessageComponent] = useState(false);
   const [receiverId, setReceiverId] = useState(null);
   const [followers, setFollowers] = useState([]);
   const [selectedUser, setSelectedUser] = useState(null);
+  const navigate = useNavigate();
 
   const apiUrl = import.meta.env.VITE_API_BASE_URL;
+
+  const isAuthenticated = () => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      try {
+        const decodedToken = JSON.parse(atob(token.split(".")[1]));
+        const expirationTime = decodedToken.exp * 1000;
+        return Date.now() < expirationTime;
+      } catch (error) {
+        console.error("Error decoding token: ", error.message);
+        return false;
+      }
+    } else {
+      return false;
+    }
+  };
+
+  useEffect(() => {
+    if (!isAuthenticated()) {
+      navigate("/login");
+    }
+  }, [navigate]);
 
   useEffect(() => {
     const fetchFollowers = async () => {
