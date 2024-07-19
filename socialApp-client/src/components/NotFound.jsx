@@ -1,16 +1,36 @@
-import React from "react";
+import React, { useEffect } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "../styles/not-found.css";
+import loaderImage from "/home/samuel/Documents/GitHub/cautious-robot/socialApp-client/src/assets/mona-loading-dark-7701a7b97370.gif";
 
 const NotFound = () => {
   const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+       const timer = setTimeout(() => {
+      setIsLoading(false);
+    }, 3000);
+
+    return () => clearTimeout(timer);
+  }, []);
 
   const handleBackHome = () => {
     navigate("/home");
   };
 
+  if (isLoading) {
+    return (
+      <div className="loader">
+        <img src={loaderImage} alt="Loading..." style={{ width: 30, marginTop: 550 }} />
+        <p className="loader-text">One moment, please...</p>
+      </div>
+    );
+  }
+
   return (
-    <div style={{ textAlign: "center", marginTop: 20 }}>
+    <div style={{ textAlign: "center"}}>
       <div className="main">
         <div>
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 355">
@@ -402,8 +422,8 @@ const NotFound = () => {
           borderRadius: "8px",
           fontSize: "11px",
           transition: "background-color 0.3s ease",
-          marginTop: "20px",
           width: 150,
+          marginTop: "-20px"
         }}
       >
         Go back Home

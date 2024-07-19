@@ -18,6 +18,7 @@ public class Post {
 	private String userId;
 	private String content;
 	private List<Comments> commentsList = new ArrayList<>();
+	private List<String> likes = new ArrayList<>();
     private String postDate;
 	private String postTime;
 
@@ -82,5 +83,12 @@ public class Post {
 	}
 	public void setPostTime(String postTime) {
 		this.postTime = postTime;
+	}
+
+	public List<String> getLikes(){
+		return likes;
+	}
+	public void setLikes(List<String> likes){
+		this.likes = likes;
 	}
 }

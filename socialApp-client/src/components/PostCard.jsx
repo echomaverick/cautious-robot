@@ -11,7 +11,7 @@ import { IoBookmark, IoBookmarkOutline } from "react-icons/io5";
 import Modal from "react-bootstrap/Modal";
 import defaultUserIcon from "/home/samuel/Documents/GitHub/cautious-robot/socialApp-client/src/depositphotos_137014128-stock-illustration-user-profile-icon.webp";
 import redditIcon from "/home/samuel/Documents/GitHub/cautious-robot/socialApp-client/src/assets/reddit.png";
-import youtubeIcon from "/home/samuel/Documents/GitHub/cautious-robot/socialApp-client/src/assets/You-Tube-14.png";
+import whatsapp from "/home/samuel/Documents/GitHub/cautious-robot/socialApp-client/src/assets/whatsapp.png";
 import xIcon from "/home/samuel/Documents/GitHub/cautious-robot/socialApp-client/src/assets/x.png";
 import facebookIcon from "/home/samuel/Documents/GitHub/cautious-robot/socialApp-client/src/assets/facebook.png";
 import "../styles/post-card.css";
@@ -30,24 +30,29 @@ const PostCard = ({ id, title, content, postDate, postTime, userId }) => {
   const [copied, setCopied] = useState(false);
   const [showShareModal, setShowShareModal] = useState(false);
   const [saved, setSaved] = useState(false);
+  const [likeCount, setLikeCount] = useState(0);
 
   const apiUrl = import.meta.env.VITE_API_BASE_URL;
   const navigate = useNavigate();
 
+  // Fetches the user details based on the userId from the API.
   useEffect(() => {
     const fetchUserDetails = async () => {
       try {
         const response = await axios.get(`${apiUrl}/users/${userId}`);
         if (response.status === 200) {
+          // Set the user data in state if the request is successful.
           setUser(response.data);
         }
       } catch (error) {
         console.error("Error fetching user details:", error.message);
       }
     };
-    fetchUserDetails();
-  }, [userId]);
 
+    fetchUserDetails();
+  }, [userId]); // Re-run this effect when userId changes.
+
+  // Fetches the list of posts liked by the current user.
   useEffect(() => {
     const fetchLikedPosts = async () => {
       const userIdFromToken = getUserIdFromToken();
@@ -60,6 +65,7 @@ const PostCard = ({ id, title, content, postDate, postTime, userId }) => {
         const response = await axios.get(`${apiUrl}/likes/${userIdFromToken}`);
         if (response.status === 200) {
           const likedPosts = response.data[0]?.postId || [];
+          // Check if the current postId is in the list of liked posts.
           if (likedPosts.includes(id)) {
             setLiked(true);
           }
@@ -72,6 +78,27 @@ const PostCard = ({ id, title, content, postDate, postTime, userId }) => {
     fetchLikedPosts();
   }, [id]);
 
+  // Fetches the like count for the current post.
+  useEffect(() => {
+    const fetchLikeCount = async () => {
+      try {
+        const likeResponse = await axios.get(`${apiUrl}/likes/post/${id}`);
+        if (likeResponse.status === 200) {
+          // Set the like count if the request is successful.
+          setLikeCount(likeResponse.data);
+          console.log("Like count response:", likeResponse.data);
+        } else {
+          console.error("Failed to fetch like count");
+        }
+      } catch (error) {
+        console.error("Error fetching like count:", error.message);
+      }
+    };
+
+    fetchLikeCount();
+  }, [id]);
+
+  // Fetches details of the post, including comments.
   const fetchPostDetails = async () => {
     try {
       const response = await axios.get(`${apiUrl}/posts/${id}`);
@@ -80,6 +107,7 @@ const PostCard = ({ id, title, content, postDate, postTime, userId }) => {
       if (response.status === 200) {
         const { commentsList } = response.data;
         if (commentsList) {
+          // Update comments list and count if the request is successful.
           setCommentsList(commentsList);
           setCommentCount(commentsList.length || 0);
         } else {
@@ -92,6 +120,7 @@ const PostCard = ({ id, title, content, postDate, postTime, userId }) => {
     }
   };
 
+  // Fetches the list of posts saved by the current user.
   useEffect(() => {
     const fetchSavedPosts = async () => {
       const userIdFromToken = getUserIdFromToken();
@@ -106,6 +135,7 @@ const PostCard = ({ id, title, content, postDate, postTime, userId }) => {
         );
         if (response.status === 200) {
           const savedPostIds = response.data.postIds || [];
+          // Check if the current postId is in the list of saved posts.
           if (savedPostIds.includes(id)) {
             setSaved(true);
           }
@@ -118,29 +148,38 @@ const PostCard = ({ id, title, content, postDate, postTime, userId }) => {
     fetchSavedPosts();
   }, [id]);
 
+  useEffect(() => {
+    setCopied(false);
+  }, [shareUrl]);
+
+  // Toggles the display of comments (expanded/collapsed state).
   const toggleComments = (e) => {
     e.stopPropagation();
     setExpanded(!expanded);
   };
 
+  // Toggles the visibility of the new comment form.
   const toggleNewCommentForm = (e) => {
     e.stopPropagation();
     setShowNewCommentForm(!showNewCommentForm);
   };
 
+  // Fetches the details of the post, including comments.
   useEffect(() => {
     fetchPostDetails();
   }, [id]);
 
+  // Updates the new comment state when the comment input changes.
   const handleCommentChange = (e) => {
     setNewComment(e.target.value);
   };
 
+  // Retrieves the userId from the authentication token stored in localStorage.
   const getUserIdFromToken = () => {
     const token = localStorage.getItem("token");
     if (token) {
       try {
-        const decodedToken = JSON.parse(atob(token.split(".")[1]));
+        const decodedToken = JSON.parse(atob(token.split(".")[1])); // Decodes the token to get userId.
         return decodedToken.userId;
       } catch (error) {
         console.error("Error decoding token:", error.message);
@@ -150,20 +189,22 @@ const PostCard = ({ id, title, content, postDate, postTime, userId }) => {
     return null;
   };
 
+  // Navigates to the specific post page.
   const navigateToPost = () => {
     navigate(`/posts/${id}`);
   };
 
+  // Handles adding a new comment to the post.
   const navigateToAddComment = async () => {
     const commenterId = getUserIdFromToken();
     if (!commenterId) {
       console.error("User not authenticated or token invalid.");
-      return;
+      return; // Returns early if the user is not authenticated.
     }
 
     if (newComment.trim() === "") {
       console.error("Empty comment cannot be posted.");
-      return;
+      return; // Returns early if the comment is empty.
     }
 
     try {
@@ -186,8 +227,8 @@ const PostCard = ({ id, title, content, postDate, postTime, userId }) => {
           content: commentContent,
           commentDate,
         };
-        setCommentsList([newCommentObj, ...commentsList]);
-        setCommentCount(commentCount + 1);
+        setCommentsList([newCommentObj, ...commentsList]); // Adds the new comment to the list.
+        setCommentCount(commentCount + 1); // Updates the comment count.
         setNewComment("");
         setShowNewCommentForm(false);
       }
@@ -196,12 +237,13 @@ const PostCard = ({ id, title, content, postDate, postTime, userId }) => {
     }
   };
 
+  // Handles toggling the like status of the post.
   const toggleLike = async (e) => {
     e.stopPropagation();
     const userIdFromToken = getUserIdFromToken();
     if (!userIdFromToken) {
       console.error("User not authenticated or token invalid.");
-      return;
+      return; // Returns early if the user is not authenticated.
     }
 
     try {
@@ -209,17 +251,22 @@ const PostCard = ({ id, title, content, postDate, postTime, userId }) => {
         await axios.post(`${apiUrl}/likes/post/${userIdFromToken}/${id}`);
         setLiked(true);
       }
+      const likeResponse = await axios.get(`${apiUrl}/likes/post/${postId}`);
+      if (likeResponse.status === 200) {
+        setLikeCount(likeResponse.data);
+      }
     } catch (error) {
       console.error("Error toggling like:", error.message);
     }
   };
 
+  // Handles toggling the saved status of the post.
   const toggleSave = async (e) => {
     e.stopPropagation();
     const userIdFromToken = getUserIdFromToken();
     if (!userIdFromToken) {
       console.error("User not authenticated or token invalid.");
-      return;
+      return; // Returns early if the user is not authenticated.
     }
 
     try {
@@ -242,17 +289,48 @@ const PostCard = ({ id, title, content, postDate, postTime, userId }) => {
   const handleCloseShareModal = () => setShowShareModal(false);
 
   const handleShareToPlatform = (platform) => {
-    const constructedShareUrl = `http://localhost:5173/posts/${id}`;
-    setShareUrl(constructedShareUrl);
+    const postUrl = `http://localhost:5173/posts/${id}`;
+    const encodedUrl = encodeURIComponent(postUrl);
+    const shareText = encodeURIComponent("Check out this post!");
+
+    switch (platform) {
+      case "twitter":
+        // For Twitter (now X)
+        setShareUrl(
+          `https://x.com/intent/tweet?url=${encodedUrl}&text=${shareText}`
+        );
+        break;
+      case "reddit":
+        // For Reddit
+        setShareUrl(
+          `https://www.reddit.com/submit?url=${encodedUrl}&title=${shareText}`
+        );
+        break;
+      case "facebook":
+        // For Facebook
+        setShareUrl(
+          `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`
+        );
+        break;
+      case "whatsapp":
+        // For WhatsApp
+        setShareUrl(`https://wa.me/?text=${shareText}%20${encodedUrl}`);
+        break;
+      default:
+        console.error("Unsupported platform:", platform);
+        return;
+    }
     setShowShareModal(true);
     setSelectedPlatform(platform);
   };
 
+  // Copies the post URL to the clipboard and updates the copied state.
   const copyUrlToClipboard = () => {
     navigator.clipboard
       .writeText(shareUrl)
       .then(() => {
         setCopied(true);
+        setTimeout(() => setCopied(false), 2000);
       })
       .catch((error) => {
         console.error("Error copying URL to clipboard:", error);
@@ -269,21 +347,24 @@ const PostCard = ({ id, title, content, postDate, postTime, userId }) => {
     }
   };
 
+  // Formats the given date to a more readable format (e.g., "Jul 19, 2024").
   const formatDate = (postDate) => {
     const date = new Date(postDate);
     return format(date, "MMM dd, yyyy");
   };
 
+  // Formats the given time to a "HH:MM" format.
   const formatTime = (postTime) => {
     const [timeString] = postTime.split(".");
     const [hours, minutes] = timeString.split(":");
     return `${hours}:${minutes}`;
   };
 
+  // Checks if the given date is valid by attempting to parse it.
   const isValidDate = (date) => {
     return !isNaN(Date.parse(date));
   };
-  
+
   return (
     <div className="post-card">
       <div className="post-header">
@@ -304,11 +385,14 @@ const PostCard = ({ id, title, content, postDate, postTime, userId }) => {
             <AiOutlineComment className="icon" />
             <p className="comment-num">{commentCount}</p>
           </div>
-          {liked ? (
-            <IoMdHeart className="icon liked" onClick={toggleLike} />
-          ) : (
-            <IoMdHeartEmpty className="icon" onClick={toggleLike} />
-          )}
+          <div>
+            {liked ? (
+              <IoMdHeart className="icon liked" onClick={toggleLike} />
+            ) : (
+              <IoMdHeartEmpty className="icon" onClick={toggleLike} />
+            )}
+            <span className="like-count">{likeCount}</span>
+          </div>
           {saved ? (
             <IoBookmark className="icon saved" onClick={toggleSave} />
           ) : (
@@ -380,9 +464,9 @@ const PostCard = ({ id, title, content, postDate, postTime, userId }) => {
           <div className="share-icons">
             <button
               className="share-icon"
-              onClick={() => handleShareToPlatform("youtube")}
+              onClick={() => handleShareToPlatform("whatsapp")}
             >
-              <img className="youtube-icon" src={youtubeIcon} alt="YouTube" />
+              <img className="youtube-icon" src={whatsapp} alt="Whatsapp" />
             </button>
             <button
               className="share-icon"

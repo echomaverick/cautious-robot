@@ -1,7 +1,10 @@
 package org.server.socialapp.services;
 
+import org.server.socialapp.exceptions.ResourceNotFoundException;
 import org.server.socialapp.models.Like;
+import org.server.socialapp.models.Post;
 import org.server.socialapp.repositories.LikesRepository;
+import org.server.socialapp.repositories.PostRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,6 +17,8 @@ public class LikesService {
 
 	@Autowired
 	private LikesRepository likesRepository;
+	@Autowired
+	private PostRepository postRepository;
 
 	@Transactional
 	public Like likePost(String userId , String postId) {
@@ -24,16 +29,19 @@ public class LikesService {
 		} else {
 			like = userLikes.get(0);
 		}
-
-		if (like.getPostId() == null) {
-			like.setPostId(new ArrayList<>());
-		}
-
-		if (!like.getPostId().contains(postId)) {
+		if (!like.getPostId().equals(postId)) {
 			like.getPostId().add(postId);
 		}
 
-		return likesRepository.save(like);
+		likesRepository.save(like);
+
+		Post post = postRepository.findById(postId).orElseThrow(() -> new ResourceNotFoundException("Post not found"));
+		if (!post.getLikes().contains(userId)) {
+			post.getLikes().add(userId);
+		}
+		postRepository.save(post);
+
+		return like;
 	}
 
 	@Transactional
@@ -81,15 +89,16 @@ public class LikesService {
 		}
 	}
 
-	public List<Like> getLikesForPost(String postId) {
-		return likesRepository.findByPostIdContaining(postId);
+	public int getLikesCountForPost(String postId) {
+		List<Like> likes = likesRepository.findByPostIdContaining(postId);
+		return likes.size();
 	}
 
 	public List<Like> getLikesForComment(String commentId) {
 		return likesRepository.findByCommentIdContaining(commentId);
 	}
 
-	public List<Like> getLikesForUser(String userId){
+	public List<Like> getLikesForUser(String userId) {
 		return likesRepository.findByUserId(userId);
 	}
 }

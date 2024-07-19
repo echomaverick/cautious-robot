@@ -17,8 +17,6 @@ import xIcon from "/home/samuel/Documents/GitHub/cautious-robot/socialApp-client
 import facebookIcon from "/home/samuel/Documents/GitHub/cautious-robot/socialApp-client/src/assets/facebook.png";
 import "../styles/post-details.css";
 
-const CACHE_DURATION = 30 * 60 * 1000;
-
 const PostDetail = () => {
   const { postId } = useParams();
   const [post, setPost] = useState(null);
@@ -37,21 +35,25 @@ const PostDetail = () => {
   const [copied, setCopied] = useState(false);
   const [showShareModal, setShowShareModal] = useState(false);
   const [saved, setSaved] = useState(false);
+  const [likeCount, setLikeCount] = useState(0);
 
   const apiUrl = import.meta.env.VITE_API_BASE_URL;
 
   useEffect(() => {
+    // Function to fetch the details of a specific post, including comments, like count, and whether the user has liked the post.
     const fetchPostDetails = async () => {
       try {
-        setIsLoading(true);
+        setIsLoading(true); // Set loading state to true while fetching data.
 
-        const response = await axios.get(`${apiUrl}/posts/${postId}`);
-        console.log("Post details response:", response.data);
+        // Fetch post details based on the postId from the URL parameters.
+        const postResponse = await axios.get(`${apiUrl}/posts/${postId}`);
+        console.log("Post details response:", postResponse.data);
 
-        if (response.status === 200) {
-          const postData = response.data;
+        if (postResponse.status === 200) {
+          const postData = postResponse.data;
           setPost(postData);
 
+          // Set comments list and count from the fetched post data.
           const { commentsList } = postData;
           if (commentsList) {
             setCommentsList(commentsList);
@@ -62,6 +64,29 @@ const PostDetail = () => {
           }
         } else {
           setError("Failed to fetch post details");
+        }
+
+        // Fetch the like count for the post.
+        const likeResponse = await axios.get(`${apiUrl}/likes/post/${postId}`);
+        if (likeResponse.status === 200) {
+          setLikeCount(likeResponse.data);
+          console.log("Response data is coming: ", likeResponse);
+        } else {
+          console.error("Failed to fetch like count");
+        }
+
+        // Check if the current user has liked this post.
+        const userIdFromToken = getUserIdFromToken();
+        if (userIdFromToken) {
+          const likedPostsResponse = await axios.get(
+            `${apiUrl}/likes/${userIdFromToken}`
+          );
+          if (likedPostsResponse.status === 200) {
+            const likedPosts = likedPostsResponse.data[0]?.postId || [];
+            if (likedPosts.includes(postId)) {
+              setLiked(true);
+            }
+          }
         }
       } catch (error) {
         console.error("Error fetching post details:", error.message);
@@ -77,21 +102,22 @@ const PostDetail = () => {
     fetchPostDetails();
   }, [apiUrl, postId]);
 
-  const isValidDate = (date) => {
-    return !isNaN(Date.parse(date));
+  // Retrieves the user ID from the JWT token stored in local storage.
+  const getUserIdFromToken = () => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      try {
+        const decodedToken = JSON.parse(atob(token.split(".")[1]));
+        return decodedToken.userId;
+      } catch (error) {
+        console.error("Error decoding token:", error.message);
+        return null;
+      }
+    }
+    return null;
   };
 
-  const formatDate = (postDate) => {
-    const date = new Date(postDate);
-    return format(date, "MMM dd, yyyy");
-  };
-
-  const formatTime = (postTime) => {
-    const [timeString] = postTime.split(".");
-    const [hours, minutes] = timeString.split(":");
-    return `${hours}:${minutes}`;
-  };
-
+  // Handles posting a new comment by the authenticated user.
   const navigateToAddComment = async () => {
     const commenterId = getUserIdFromToken();
     if (!commenterId) {
@@ -99,6 +125,7 @@ const PostDetail = () => {
       return;
     }
 
+    // Prevent posting empty comments.
     if (newComment.trim() === "") {
       console.error("Empty comment cannot be posted.");
       return;
@@ -124,6 +151,7 @@ const PostDetail = () => {
           content: commentContent,
           commentDate,
         };
+        // Update comments list and count.
         setCommentsList([newCommentObj, ...commentsList]);
         setCommentCount(commentCount + 1);
         setNewComment("");
@@ -134,6 +162,7 @@ const PostDetail = () => {
     }
   };
 
+  // Toggles the saved state of a post (save or unsave).
   const toggleSave = async (e) => {
     e.stopPropagation();
     const userIdFromToken = getUserIdFromToken();
@@ -155,6 +184,7 @@ const PostDetail = () => {
     }
   };
 
+  // Toggles the like state of a post (like or unlike).
   const toggleLike = async (e) => {
     e.stopPropagation();
     const userIdFromToken = getUserIdFromToken();
@@ -168,11 +198,18 @@ const PostDetail = () => {
         await axios.post(`${apiUrl}/likes/post/${userIdFromToken}/${id}`);
         setLiked(true);
       }
+
+      // Update the like count after liking/unliking.
+      const likeResponse = await axios.get(`${apiUrl}/likes/post/${postId}`);
+      if (likeResponse.status === 200) {
+        setLikeCount(likeResponse.data);
+      }
     } catch (error) {
       console.error("Error toggling like:", error.message);
     }
   };
 
+  // Copies the post URL to the clipboard and updates the copied state.
   const copyUrlToClipboard = () => {
     navigator.clipboard
       .writeText(shareUrl)
@@ -184,21 +221,26 @@ const PostDetail = () => {
       });
   };
 
+  // Toggles the visibility of the new comment form.
   const toggleNewCommentForm = (e) => {
     e.stopPropagation();
     setShowNewCommentForm(!showNewCommentForm);
   };
 
+  // Handles changes in the new comment input field.
   const handleCommentChange = (e) => {
     setNewComment(e.target.value);
   };
 
+  // Shows and hides the modal for additional functionalities.
   const handleShowModal = () => setShowModal(true);
   const handleCloseModal = () => setShowModal(false);
 
+  // Shows and hides the share modal for sharing the post.
   const handleShowShareModal = () => setShowShareModal(true);
   const handleCloseShareModal = () => setShowShareModal(false);
 
+  // Handles sharing the post to a selected platform and updates the share URL.
   const handleShareToPlatform = (platform) => {
     const constructedShareUrl = `http://localhost:5173/posts/${id}`;
     setShareUrl(constructedShareUrl);
@@ -206,10 +248,30 @@ const PostDetail = () => {
     setSelectedPlatform(platform);
   };
 
+  // Checks if the given date is valid by attempting to parse it.
+  const isValidDate = (date) => {
+    return !isNaN(Date.parse(date));
+  };
+
+  // Formats the given post date to a more readable format (e.g., "Jul 19, 2024").
+  const formatDate = (postDate) => {
+    const date = new Date(postDate);
+    return format(date, "MMM dd, yyyy");
+  };
+
+  // Formats the given post time to a "HH:MM" format.
+  const formatTime = (postTime) => {
+    const [timeString] = postTime.split(".");
+    const [hours, minutes] = timeString.split(":");
+    return `${hours}:${minutes}`;
+  };
+
+  // Error message display when there is an error.
   if (error) {
     return <div style={{ color: "red" }}>{error}</div>;
   }
 
+  // Loader display while data is being fetched.
   if (isLoading) {
     return (
       <div
@@ -250,11 +312,14 @@ const PostDetail = () => {
               <AiOutlineComment className="icon" />
               <p className="comment-num">{commentCount}</p>
             </div>
-            {liked ? (
-              <IoMdHeart className="icon liked" onClick={toggleLike} />
-            ) : (
-              <IoMdHeartEmpty className="icon" onClick={toggleLike} />
-            )}
+            <div>
+              {liked ? (
+                <IoMdHeart className="icon liked" onClick={toggleLike} />
+              ) : (
+                <IoMdHeartEmpty className="icon" onClick={toggleLike} />
+              )}
+              <span className="like-count">{likeCount}</span>
+            </div>
             {saved ? (
               <IoBookmark className="icon saved" onClick={toggleSave} />
             ) : (

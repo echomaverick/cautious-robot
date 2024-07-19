@@ -1,5 +1,5 @@
 .main {
-  margin-top: 15%;
+  margin-top: 95px;
 }
 
 .st0 {
@@ -39,8 +39,6 @@
 }
 .st9 {
   fill: none;
-}
-.st10 {
 }
 
 #cloud1 {
@@ -108,11 +106,6 @@
     transform: translateX(100px);
   }
 }
-
-/* @keyframes cloudFloat {
-    0% { transform: translateX(0) translateY(3px); }
-    100% { transform: translateX(1000px) translateY(0); }
-  } */
 
 @keyframes cloud001 {
   0% {
