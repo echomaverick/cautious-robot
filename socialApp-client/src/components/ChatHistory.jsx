@@ -82,16 +82,22 @@ const ChatHistory = () => {
         await new Promise((resolve) => setTimeout(resolve, 3000));
 
         if (response.data.length === 0) {
-          setMessage(
-            `Didn't find anything for "${searchQuery}". Try another search.`
-          );
+          setMessage(`No user found`);
         } else {
           setSearchResults(response.data);
+          setMessage("");
         }
       }
     } catch (error) {
-      console.error("Error searching users", error);
-      setMessage("Error searching users");
+      if (error.response && error.response.status === 404) {
+        setMessage("No user found");
+      } else {
+        setMessage("No user found");
+      }
+      console.error(
+        "Error searching users",
+        error.response ? error.response.data : error.message
+      );
     } finally {
       setLoading(false);
     }
