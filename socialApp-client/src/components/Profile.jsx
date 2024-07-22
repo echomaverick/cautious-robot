@@ -142,45 +142,6 @@ const Profile = () => {
     return null;
   };
 
-  if (isLoading) {
-    return (
-      <div
-        className="loader"
-        style={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          backgroundColor: "rgba(255, 255, 255, 0.8)",
-          zIndex: 900,
-        }}
-      >
-        <img
-          src={loaderImage}
-          alt="Loading..."
-          style={{
-            width: 30,
-            position: "fixed",
-            top: "50%",
-            left: "50%",
-            transform: "translate(-50%, -50%)",
-          }}
-        />
-        <p
-          className="loader-text"
-          style={{
-            fontSize: 12,
-            position: "fixed",
-            top: "52%",
-            left: "50%",
-            transform: "translate(-50%, -50%)",
-          }}
-        >
-          One moment, please...
-        </p>
-      </div>
-    );
-  }
-
   return (
     <ProfileContext.Provider value={profileData}>
       <div className="profile-layout">
@@ -188,18 +149,29 @@ const Profile = () => {
           <ChatHistory />
         </div>
         <div className="main-content">
-          <Container>
-            {profileData ? (
-              <ProfileHeader
-                followers={followersCount}
-                following={followingCount}
-                posts={postsCount}
-                profile={profileData}
+          {isLoading ? (
+            <div className="loader-overlay">
+              <img
+                src={loaderImage}
+                alt="Loading..."
+                className="loader-image"
               />
-            ) : (
-              <div className="profile-error">{error}</div>
-            )}
-          </Container>
+              <p className="loader-text">One moment, please...</p>
+            </div>
+          ) : (
+            <Container>
+              {profileData ? (
+                <ProfileHeader
+                  followers={followersCount}
+                  following={followingCount}
+                  posts={postsCount}
+                  profile={profileData}
+                />
+              ) : (
+                <div className="profile-error">{error}</div>
+              )}
+            </Container>
+          )}
         </div>
       </div>
     </ProfileContext.Provider>

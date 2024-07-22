@@ -1,9 +1,9 @@
 import React, { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import ChatHistory from "./ChatHistory";
 import Post from "./Post";
 import PostList from "./PostList";
 import "../styles/home.css";
-import { useNavigate } from "react-router-dom";
 
 const Home = () => {
   const navigate = useNavigate();

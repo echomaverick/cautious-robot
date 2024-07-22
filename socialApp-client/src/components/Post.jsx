@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import "../styles/post.css";
-import { useNavigate } from "react-router-dom";
 
 const PostForm = () => {
   const [postTitle, setPostTitle] = useState("");

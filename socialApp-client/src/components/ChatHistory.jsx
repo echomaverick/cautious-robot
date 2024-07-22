@@ -7,8 +7,7 @@ import { IoPersonCircleOutline } from "react-icons/io5";
 import { IoBookmarkOutline } from "react-icons/io5";
 import { AiOutlineMessage } from "react-icons/ai";
 import { TbPremiumRights } from "react-icons/tb";
-import { CiLogout } from "react-icons/ci";
-import { CiSearch } from "react-icons/ci";
+import { CiLogout, CiSearch } from "react-icons/ci";
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import Form from "react-bootstrap/Form";
@@ -27,21 +26,6 @@ const ChatHistory = () => {
 
   const apiUrl = import.meta.env.VITE_API_BASE_URL;
 
-  // Function to get username from token
-  const getUsernameFromToken = () => {
-    const token = localStorage.getItem("token");
-    if (token) {
-      try {
-        const decodedToken = JSON.parse(atob(token.split(".")[1]));
-        return decodedToken.sub;
-      } catch (error) {
-        console.error("Error decoding token:", error.message);
-        return null;
-      }
-    }
-    return null;
-  };
-
   const getUserIdFromToken = () => {
     const token = localStorage.getItem("token");
     if (token) {
@@ -58,7 +42,11 @@ const ChatHistory = () => {
 
   const handleLogout = () => {
     localStorage.removeItem("token");
-    navigate("/login");
+    setMessage("You are now logged out. Redirecting to login...");
+    setShowModal(true);
+    setTimeout(() => {
+      navigate("/login");
+    }, 2000);
   };
 
   const handleShowModal = () => {
@@ -169,52 +157,15 @@ const ChatHistory = () => {
             </a>
           </div>
         </div>
-        <Modal show={showModal} onHide={handleCloseModal}>
-          <Modal.Header closeButton>
-            <Modal.Title>Search Users</Modal.Title>
-          </Modal.Header>
+        <Modal show={showModal} onHide={handleCloseModal} backdrop="static">
           <Modal.Body>
-            <Form.Group controlId="searchForm">
-              <Form.Control
-                type="text"
-                placeholder="Enter username or name and surname"
-                value={searchQuery}
-                onChange={handleInputChange}
-                onKeyPress={handleKeyPress}
-              />
-            </Form.Group>
-            {searchResults.length > 0 && (
-              <ul className="user-lists">
-                {searchResults.map((user) => (
-                  <li key={user.id}>
-                    <a href="#" onClick={() => handleProfileRedirect(user.id)}>
-                      {user.username}
-                    </a>
-                  </li>
-                ))}
-              </ul>
-            )}
-            {searchResults.length === 0 && !loading && <p>{message}</p>}
-            <Button variant="primary" onClick={handleSearch} disabled={loading}>
-              {loading ? (
-                <>
-                  <img
-                    src={loaderImage}
-                    style={{ width: 30, marginRight: 10 }}
-                    alt="Loading..."
-                  />{" "}
-                  Searching...
-                </>
-              ) : (
-                "Search"
-              )}
-            </Button>
+            <p>{message}</p>
+            <img
+              src={loaderImage}
+              style={{ width: 30, display: "block", margin: "0 auto" }}
+              alt="Loading..."
+            />
           </Modal.Body>
-          <Modal.Footer>
-            <Button variant="secondary" onClick={handleCloseModal}>
-              Close
-            </Button>
-          </Modal.Footer>
         </Modal>
       </div>
     </>

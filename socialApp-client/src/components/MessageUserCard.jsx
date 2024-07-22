@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import MessageComponent from "../components/Message";
 import { MdMessage } from "react-icons/md";
 import "../styles/user-cards.css";
-import { useNavigate } from "react-router-dom";
 
 const UserCard = ({ user }) => {
   const [showMessageComponent, setShowMessageComponent] = useState(false);

@@ -103,9 +103,9 @@ const PostList = () => {
 
   if (isLoading) {
     return (
-      <div className="loader">
+      <div className="text-lolader">
         <img src={loaderImage} alt="Loading..." style={{ width: 30 }} />
-        <p className="loader-text">One moment, please...</p>
+        <p className="loade-txt">One moment, please...</p>
       </div>
     );
   }
