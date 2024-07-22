@@ -12,9 +12,9 @@ import Modal from "react-bootstrap/Modal";
 import loaderImage from "/home/samuel/Documents/GitHub/cautious-robot/socialApp-client/src/assets/mona-loading-dark-7701a7b97370.gif";
 import defaultUserIcon from "/home/samuel/Documents/GitHub/cautious-robot/socialApp-client/src/depositphotos_137014128-stock-illustration-user-profile-icon.webp";
 import redditIcon from "/home/samuel/Documents/GitHub/cautious-robot/socialApp-client/src/assets/reddit.png";
-import youtubeIcon from "/home/samuel/Documents/GitHub/cautious-robot/socialApp-client/src/assets/You-Tube-14.png";
-import xIcon from "/home/samuel/Documents/GitHub/cautious-robot/socialApp-client/src/assets/x.png";
-import facebookIcon from "/home/samuel/Documents/GitHub/cautious-robot/socialApp-client/src/assets/facebook.png";
+import whatsapp from "/home/samuel/Documents/GitHub/cautious-robot/socialApp-client/src/assets/whatsapp.png";
+import xIcon from "/home/samuel/Documents/GitHub/cautious-robot/socialApp-client/src/assets/twitter.jpg";
+import facebookIcon from "/home/samuel/Documents/GitHub/cautious-robot/socialApp-client/src/assets/faceboook.png";
 import "../styles/post-details.css";
 
 const PostDetail = () => {
@@ -265,12 +265,38 @@ const PostDetail = () => {
 
   // Handles sharing the post to a selected platform and updates the share URL.
   const handleShareToPlatform = (platform) => {
-    const constructedShareUrl = `http://localhost:5173/posts/${id}`;
-    setShareUrl(constructedShareUrl);
+    const postUrl = `http://localhost:5173/posts/${postId}`;
+    const encodedUrl = encodeURIComponent(postUrl);
+    const shareText = encodeURIComponent("Check out this post!");
+
+    switch (platform) {
+      case "twitter":
+        // For Twitter (now X)
+        setShareUrl(`https://twitter.com/intent/tweet?url=${encodedUrl}`);
+        break;
+      case "reddit":
+        // For Reddit
+        setShareUrl(
+          `https://www.reddit.com/submit?url=${encodedUrl}&title=${shareText}`
+        );
+        break;
+      case "facebook":
+        // For Facebook
+        setShareUrl(
+          `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`
+        );
+        break;
+      case "whatsapp":
+        // For WhatsApp
+        setShareUrl(`https://wa.me/?text=${shareText}%20${encodedUrl}`);
+        break;
+      default:
+        console.error("Unsupported platform:", platform);
+        return;
+    }
     setShowShareModal(true);
     setSelectedPlatform(platform);
   };
-
   // Checks if the given date is valid by attempting to parse it.
   const isValidDate = (date) => {
     return !isNaN(Date.parse(date));
@@ -415,9 +441,9 @@ const PostDetail = () => {
             <div className="share-icons">
               <button
                 className="share-icon"
-                onClick={() => handleShareToPlatform("youtube")}
+                onClick={() => handleShareToPlatform("whatsapp")}
               >
-                <img className="youtube-icon" src={youtubeIcon} alt="YouTube" />
+                <img className="youtube-icon" src={whatsapp} alt="Whatsapp" />
               </button>
               <button
                 className="share-icon"
@@ -427,7 +453,7 @@ const PostDetail = () => {
               </button>
               <button
                 className="share-icon"
-                onClick={() => handleShareToPlatform("x")}
+                onClick={() => handleShareToPlatform("twitter")}
               >
                 <img className="x-icon" src={xIcon} alt="X" />
               </button>

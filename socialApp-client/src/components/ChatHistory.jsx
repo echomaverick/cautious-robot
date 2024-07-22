@@ -3,8 +3,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { GoHome } from "react-icons/go";
-import { IoPersonCircleOutline } from "react-icons/io5";
-import { IoBookmarkOutline } from "react-icons/io5";
+import { IoPersonCircleOutline, IoBookmarkOutline } from "react-icons/io5";
 import { AiOutlineMessage } from "react-icons/ai";
 import { TbPremiumRights } from "react-icons/tb";
 import { CiLogout, CiSearch } from "react-icons/ci";
@@ -12,13 +11,14 @@ import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import Form from "react-bootstrap/Form";
 import loaderImage from "/home/samuel/Documents/GitHub/cautious-robot/socialApp-client/src/assets/mona-loading-dark-7701a7b97370.gif";
-import image from "../assets/ri.gif";
+import image from "../assets/logo.png";
 import "../styles/history.css";
 
 const ChatHistory = () => {
   const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
-  const [showModal, setShowModal] = useState(false);
+  const [showSearchModal, setShowSearchModal] = useState(false);
+  const [showLogoutModal, setShowLogoutModal] = useState(false);
   const [loading, setLoading] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [searchResults, setSearchResults] = useState([]);
@@ -43,21 +43,25 @@ const ChatHistory = () => {
   const handleLogout = () => {
     localStorage.removeItem("token");
     setMessage("You are now logged out. Redirecting to login...");
-    setShowModal(true);
+    setShowLogoutModal(true);
     setTimeout(() => {
       navigate("/login");
     }, 2000);
   };
 
-  const handleShowModal = () => {
-    setShowModal(true);
+  const handleShowSearchModal = () => {
+    setShowSearchModal(true);
   };
 
-  const handleCloseModal = () => {
-    setShowModal(false);
+  const handleCloseSearchModal = () => {
+    setShowSearchModal(false);
     setSearchQuery("");
     setSearchResults([]);
     setMessage("");
+  };
+
+  const handleCloseLogoutModal = () => {
+    setShowLogoutModal(false);
   };
 
   const handleSearch = async () => {
@@ -133,7 +137,7 @@ const ChatHistory = () => {
               <IoPersonCircleOutline className="icon" />
               <span>Profile</span>
             </a>
-            <a className="history-link" onClick={handleShowModal}>
+            <a className="history-link" onClick={handleShowSearchModal}>
               <CiSearch className="icon" />
               <span style={{ cursor: "pointer" }}>Search</span>
             </a>
@@ -151,20 +155,62 @@ const ChatHistory = () => {
             </a>
             <a className="history-link" onClick={handleLogout}>
               <CiLogout className="icon" />
-              <span onClick={handleLogout} style={{ cursor: "pointer" }}>
-                Logout
-              </span>
+              <span style={{ cursor: "pointer" }}>Logout</span>
             </a>
           </div>
         </div>
-        <Modal show={showModal} onHide={handleCloseModal} backdrop="static">
+        {/* Search Modal */}
+        <Modal
+          show={showSearchModal}
+          onHide={handleCloseSearchModal}
+          backdrop="static"
+        >
+          <Modal.Body>
+            <Form.Group controlId="searchForm">
+              <Form.Control
+                type="text"
+                placeholder="Enter username or name and surname"
+                value={searchQuery}
+                onChange={handleInputChange}
+                onKeyPress={handleKeyPress}
+              />
+            </Form.Group>
+            {searchResults.length > 0 && (
+              <ul className="user-lists">
+                {searchResults.map((user) => (
+                  <li key={user.id}>
+                    <a href="#" onClick={() => handleProfileRedirect(user.id)}>
+                      {user.username}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            )}
+            {searchResults.length === 0 && !loading && <p>{message}</p>}
+            <Button variant="primary" onClick={handleSearch} disabled={loading}>
+              {loading ? (
+                <>
+                  <img
+                    src={loaderImage}
+                    style={{ width: 30, marginRight: 10 }}
+                    alt="Loading..."
+                  />{" "}
+                  Searching...
+                </>
+              ) : (
+                "Search"
+              )}
+            </Button>
+          </Modal.Body>
+        </Modal>
+        {/* Logout Modal */}
+        <Modal
+          show={showLogoutModal}
+          onHide={handleCloseLogoutModal}
+          backdrop="static"
+        >
           <Modal.Body>
             <p>{message}</p>
-            <img
-              src={loaderImage}
-              style={{ width: 30, display: "block", margin: "0 auto" }}
-              alt="Loading..."
-            />
           </Modal.Body>
         </Modal>
       </div>

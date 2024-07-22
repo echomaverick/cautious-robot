@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
-import image from "../assets/ri.gif";
+import image from "../assets/logo.png";
 import "../styles/register.css";
 
 const Register = () => {

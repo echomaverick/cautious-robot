@@ -12,8 +12,8 @@ import Modal from "react-bootstrap/Modal";
 import defaultUserIcon from "/home/samuel/Documents/GitHub/cautious-robot/socialApp-client/src/depositphotos_137014128-stock-illustration-user-profile-icon.webp";
 import redditIcon from "/home/samuel/Documents/GitHub/cautious-robot/socialApp-client/src/assets/reddit.png";
 import whatsapp from "/home/samuel/Documents/GitHub/cautious-robot/socialApp-client/src/assets/whatsapp.png";
-import xIcon from "/home/samuel/Documents/GitHub/cautious-robot/socialApp-client/src/assets/x.png";
-import facebookIcon from "/home/samuel/Documents/GitHub/cautious-robot/socialApp-client/src/assets/facebook.png";
+import xIcon from "/home/samuel/Documents/GitHub/cautious-robot/socialApp-client/src/assets/twitter.jpg";
+import facebookIcon from "/home/samuel/Documents/GitHub/cautious-robot/socialApp-client/src/assets/faceboook.png";
 import "../styles/post-card.css";
 
 const PostCard = ({ id, title, content, postDate, postTime, userId }) => {
@@ -318,9 +318,7 @@ const PostCard = ({ id, title, content, postDate, postTime, userId }) => {
     switch (platform) {
       case "twitter":
         // For Twitter (now X)
-        setShareUrl(
-          `https://x.com/intent/tweet?url=${encodedUrl}&text=${shareText}`
-        );
+        setShareUrl(`https://twitter.com/intent/tweet?url=${encodedUrl}`);
         break;
       case "reddit":
         // For Reddit
@@ -498,9 +496,9 @@ const PostCard = ({ id, title, content, postDate, postTime, userId }) => {
             </button>
             <button
               className="share-icon"
-              onClick={() => handleShareToPlatform("x")}
+              onClick={() => handleShareToPlatform("twitter")}
             >
-              <img className="x-icon" src={xIcon} alt="X" />
+              <img className="x-icon" src={xIcon} alt="twitter" />
             </button>
             <button
               className="share-icon"

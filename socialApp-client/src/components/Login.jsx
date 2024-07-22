@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import image from "../assets/ri.gif";
+import image from "../assets/logo.png";
 import "../styles/login.css";
 
 const LoginScript = () => {
