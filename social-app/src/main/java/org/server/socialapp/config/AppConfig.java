@@ -7,11 +7,11 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class AppConfig {
-    @Bean
-    public FilterRegistrationBean<RateLimitingFilter> rateLimitingFilter() {
-        FilterRegistrationBean<RateLimitingFilter> registrationBean = new FilterRegistrationBean<>();
-        registrationBean.setFilter(new RateLimitingFilter());
-        registrationBean.addUrlPatterns("/api/*");
-        return registrationBean;
-    }
+	@Bean
+	public FilterRegistrationBean<RateLimitingFilter> rateLimitingFilter() {
+		FilterRegistrationBean<RateLimitingFilter> registrationBean = new FilterRegistrationBean<>();
+		registrationBean.setFilter(new RateLimitingFilter());
+		registrationBean.addUrlPatterns("/api/*");
+		return registrationBean;
+	}
 }

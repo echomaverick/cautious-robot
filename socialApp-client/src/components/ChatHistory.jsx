@@ -169,7 +169,7 @@ const ChatHistory = () => {
         <Modal
           show={showSearchModal}
           onHide={handleCloseSearchModal}
-          backdrop="static"
+          backdrop="true" // Enable closing by clicking outside
         >
           <Modal.Body>
             <Form.Group controlId="searchForm">
@@ -213,7 +213,7 @@ const ChatHistory = () => {
         <Modal
           show={showLogoutModal}
           onHide={handleCloseLogoutModal}
-          backdrop="static"
+          backdrop="true" // Enable closing by clicking outside
         >
           <Modal.Body>
             <p>{message}</p>

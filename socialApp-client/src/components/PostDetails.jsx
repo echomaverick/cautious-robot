@@ -70,7 +70,6 @@ const PostDetail = () => {
 
         // Fetch post details based on the postId from the URL parameters.
         const postResponse = await axios.get(`${apiUrl}/posts/${postId}`);
-        console.log("Post details response:", postResponse.data);
 
         if (postResponse.status === 200) {
           const postData = postResponse.data;
@@ -326,10 +325,7 @@ const PostDetail = () => {
       <div
         className="loader"
         style={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          marginLeft: 190,
+          marginTop: 10,
         }}
       >
         <img src={loaderImage} alt="Loading..." style={{ width: 30 }} />

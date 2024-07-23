@@ -46,18 +46,21 @@ const UserCard = ({ user }) => {
 
       try {
         const response = await axios.get(`${apiUrl}/users/list/${userId}`);
-        const followerIds = response.data.followerId;
+        const followerIds = response.data?.followerId || []; // Ensure it's an array
 
-        const followersData = await Promise.all(
-          followerIds.map(async (followerId) => {
-            const followerResponse = await axios.get(
-              `${apiUrl}/users/${followerId}`
-            );
-            return followerResponse.data;
-          })
-        );
-
-        setFollowers(followersData);
+        if (followerIds.length > 0) {
+          const followersData = await Promise.all(
+            followerIds.map(async (followerId) => {
+              const followerResponse = await axios.get(
+                `${apiUrl}/users/${followerId}`
+              );
+              return followerResponse.data;
+            })
+          );
+          setFollowers(followersData);
+        } else {
+          setFollowers([]);
+        }
       } catch (error) {
         console.error("Error fetching followers:", error);
       }
@@ -98,7 +101,7 @@ const UserCard = ({ user }) => {
         <h4>Followers</h4>
         {user?.username && <h3>{user.username}</h3>}
         {user?.email && <p>Email: {user.email}</p>}
-        {followers.length > 0 && (
+        {followers.length > 0 ? (
           <div className="followers-list">
             <ul>
               {followers.map((follower) => (
@@ -114,6 +117,8 @@ const UserCard = ({ user }) => {
               ))}
             </ul>
           </div>
+        ) : (
+          <p>No followers yet. Follow people to start chatting!</p>
         )}
       </div>
       <div

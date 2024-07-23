@@ -1,7 +1,6 @@
 import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { IoIosArrowRoundBack } from "react-icons/io";
-
 import "../styles/premium.css";
 
 const PremiumPage = () => {
@@ -36,11 +35,15 @@ const PremiumPage = () => {
   return (
     <div className="premium-page">
       <div className="background">
-        <button className="back-button" onClick={handleBackHome}>
-          <IoIosArrowRoundBack className="back-icon" />
-        </button>
         <h1 className="-plan-title" style={{ top: 10 }}>
-          Choose the best plan for you
+        <IoIosArrowRoundBack className="back-icon1" onClick={handleBackHome} style={{
+          backgroundColor: "lightgrey",
+          borderRadius: "50%",
+          width: 30,
+          height: 30,
+          gap: 20,
+          transition: "background-color 0.3s ease"
+        }}/>  Choose the best plan for you
         </h1>
         <div className="container">
           <div className="panel pricing-table">

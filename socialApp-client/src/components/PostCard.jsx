@@ -31,6 +31,7 @@ const PostCard = ({ id, title, content, postDate, postTime, userId }) => {
   const [showShareModal, setShowShareModal] = useState(false);
   const [saved, setSaved] = useState(false);
   const [likeCount, setLikeCount] = useState(0);
+  const [loading, setLoading] = useState(false);
 
   const apiUrl = import.meta.env.VITE_API_BASE_URL;
   const navigate = useNavigate();
@@ -93,7 +94,24 @@ const PostCard = ({ id, title, content, postDate, postTime, userId }) => {
           }
         }
       } catch (error) {
-        console.error("Error fetching liked posts:", error.message);
+        if (error.response) {
+          // The request was made and the server responded with a status code
+          // that falls out of the range of 2xx
+          console.error(
+            "Error fetching liked posts:",
+            error.response.data.message
+          );
+        } else if (error.request) {
+          // The request was made but no response was received
+          if (error.code === "ECONNABORTED") {
+            console.error("Request timed out. Please try again later.");
+          } else {
+            console.error("No response received. Please check your network.");
+          }
+        } else {
+          // Something happened in setting up the request that triggered an Error
+          console.error("Error fetching liked posts:", error.message);
+        }
       }
     };
 
@@ -108,12 +126,24 @@ const PostCard = ({ id, title, content, postDate, postTime, userId }) => {
         if (likeResponse.status === 200) {
           // Set the like count if the request is successful.
           setLikeCount(likeResponse.data);
-          console.log("Like count response:", likeResponse.data);
         } else {
           console.error("Failed to fetch like count");
         }
       } catch (error) {
-        console.error("Error fetching like count:", error.message);
+        if (error.response) {
+          console.error(
+            "Error fetching like count:",
+            error.response.data.message
+          );
+        } else if (error.request) {
+          if (error.code === "ECONNABORTED") {
+            console.error("Request timed out. Please try again later.");
+          } else {
+            console.error("No response received. Please check your network.");
+          }
+        } else {
+          console.error("Error fetching like count:", error.message);
+        }
       }
     };
 
@@ -124,7 +154,6 @@ const PostCard = ({ id, title, content, postDate, postTime, userId }) => {
   const fetchPostDetails = async () => {
     try {
       const response = await axios.get(`${apiUrl}/posts/${id}`);
-      console.log("Post details response:", response.data);
 
       if (response.status === 200) {
         const { commentsList } = response.data;
@@ -221,43 +250,33 @@ const PostCard = ({ id, title, content, postDate, postTime, userId }) => {
     const commenterId = getUserIdFromToken();
     if (!commenterId) {
       console.error("User not authenticated or token invalid.");
-      return; // Returns early if the user is not authenticated.
+      return;
     }
-
+  
     if (newComment.trim() === "") {
       console.error("Empty comment cannot be posted.");
-      return; // Returns early if the comment is empty.
+      return;
     }
-
+  
+    setLoading(true); // Start loader
+  
     try {
       const response = await axios.post(
         `${apiUrl}/posts/comments/create/${commenterId}/${id}`,
-        {
-          content: newComment,
-        }
+        { content: newComment }
       );
       if (response.status === 200) {
-        const {
-          id: commentId,
-          userId: commenterId,
-          content: commentContent,
-          commentDate,
-        } = response.data;
-        const newCommentObj = {
-          id: commentId,
-          userId: commenterId,
-          content: commentContent,
-          commentDate,
-        };
-        setCommentsList([newCommentObj, ...commentsList]); // Adds the new comment to the list.
-        setCommentCount(commentCount + 1); // Updates the comment count.
+        await fetchPostDetails(); // Re-fetch post details to update comments
         setNewComment("");
         setShowNewCommentForm(false);
       }
     } catch (error) {
       console.error("Error posting comment:", error.message);
+    } finally {
+      setLoading(false); // Stop loader
     }
   };
+  
 
   // Handles toggling the like status of the post.
   const toggleLike = async (e) => {
@@ -375,10 +394,16 @@ const PostCard = ({ id, title, content, postDate, postTime, userId }) => {
 
   // Formats the given time to a "HH:MM" format.
   const formatTime = (postTime) => {
+    if (!postTime) {
+      return "N/A"; // Return a default value if postTime is undefined or null
+    }
+    
     const [timeString] = postTime.split(".");
     const [hours, minutes] = timeString.split(":");
+    
     return `${hours}:${minutes}`;
   };
+  
 
   // Checks if the given date is valid by attempting to parse it.
   const isValidDate = (date) => {

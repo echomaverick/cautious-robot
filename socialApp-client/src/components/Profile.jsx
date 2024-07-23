@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { createContext } from "react";
 import { Container } from "react-bootstrap";
@@ -6,7 +7,6 @@ import ChatHistory from "./ChatHistory";
 import ProfileHeader from "./ProfileHeader";
 import loaderImage from "/home/samuel/Documents/GitHub/cautious-robot/socialApp-client/src/assets/mona-loading-dark-7701a7b97370.gif";
 import "../styles/profile.css";
-import { useNavigate } from "react-router-dom";
 
 export const ProfileContext = createContext(null);
 
