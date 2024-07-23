@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/likes")
+@RequestMapping("/api/v1/likes")
 public class LikesController {
 
 	@Autowired
