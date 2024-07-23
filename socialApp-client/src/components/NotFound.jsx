@@ -9,7 +9,7 @@ const NotFound = () => {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-       const timer = setTimeout(() => {
+    const timer = setTimeout(() => {
       setIsLoading(false);
     }, 3000);
 
@@ -23,14 +23,18 @@ const NotFound = () => {
   if (isLoading) {
     return (
       <div className="loader">
-        <img src={loaderImage} alt="Loading..." style={{ width: 30, marginTop: 550 }} />
+        <img
+          src={loaderImage}
+          alt="Loading..."
+          style={{ width: 30, marginTop: 550 }}
+        />
         <p className="loader-text">One moment, please...</p>
       </div>
     );
   }
 
   return (
-    <div style={{ textAlign: "center"}}>
+    <div style={{ textAlign: "center" }}>
       <div className="main">
         <div>
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 355">
@@ -423,7 +427,7 @@ const NotFound = () => {
           fontSize: "11px",
           transition: "background-color 0.3s ease",
           width: 150,
-          marginTop: "-20px"
+          marginTop: "-20px",
         }}
       >
         Go back Home
