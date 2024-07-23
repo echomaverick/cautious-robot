@@ -33,13 +33,14 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "localhost:8080/api/users/{userId}",
+					"raw": "localhost:8080/api/v1/users/{userId}",
 					"host": [
 						"localhost"
 					],
 					"port": "8080",
 					"path": [
 						"api",
+						"v1",
 						"users",
 						"{userId}"
 					]
@@ -53,13 +54,14 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "localhost:8080/api/posts/list/{userId}",
+					"raw": "localhost:8080/api/v1/posts/list/{userId}",
 					"host": [
 						"localhost"
 					],
 					"port": "8080",
 					"path": [
 						"api",
+						"v1",
 						"posts",
 						"list",
 						"{userId}"
@@ -74,13 +76,14 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "localhost:8080/api/posts/all",
+					"raw": "localhost:8080/api/v1/posts/all",
 					"host": [
 						"localhost"
 					],
 					"port": "8080",
 					"path": [
 						"api",
+						"v1",
 						"posts",
 						"all"
 					]
@@ -94,13 +97,14 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "localhost:8080/api/posts/{postId}",
+					"raw": "localhost:8080/api/v1/posts/{postId}",
 					"host": [
 						"localhost"
 					],
 					"port": "8080",
 					"path": [
 						"api",
+						"v1",
 						"posts",
 						"{postId}"
 					]
@@ -114,13 +118,14 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "localhost:8080/api/users/list/{userId}",
+					"raw": "localhost:8080/api/v1/users/list/{userId}",
 					"host": [
 						"localhost"
 					],
 					"port": "8080",
 					"path": [
 						"api",
+						"v1",
 						"users",
 						"list",
 						"{userId}"
@@ -135,13 +140,14 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "localhost:8080/api/users/{userId}/followers",
+					"raw": "localhost:8080/api/v1/users/{userId}/followers",
 					"host": [
 						"localhost"
 					],
 					"port": "8080",
 					"path": [
 						"api",
+						"v1",
 						"users",
 						"{userId}",
 						"followers"
@@ -156,13 +162,14 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "localhost:8080/api/users/{userId}/following",
+					"raw": "localhost:8080/api/v1/users/{userId}/following",
 					"host": [
 						"localhost"
 					],
 					"port": "8080",
 					"path": [
 						"api",
+						"v1",
 						"users",
 						"{userId}",
 						"following"
@@ -177,13 +184,14 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "localhost:8080/api/likes/{userId}",
+					"raw": "localhost:8080/api/v1/likes/{userId}",
 					"host": [
 						"localhost"
 					],
 					"port": "8080",
 					"path": [
 						"api",
+						"v1",
 						"likes",
 						"{userId}"
 					]
@@ -197,13 +205,14 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "localhost:8080/api/search/users?username={username}",
+					"raw": "localhost:8080/api/v1/search/users?username={username}",
 					"host": [
 						"localhost"
 					],
 					"port": "8080",
 					"path": [
 						"api",
+						"v1",
 						"search",
 						"users"
 					],
@@ -223,14 +232,14 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:8080/api/search/users?name={name}&surname={surname}",
-					"protocol": "http",
+					"raw": "localhost:8080/api/v1/search/users?name={name}&surname={surname}",
 					"host": [
 						"localhost"
 					],
 					"port": "8080",
 					"path": [
 						"api",
+						"v1",
 						"search",
 						"users"
 					],
@@ -254,16 +263,39 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "localhost:8080/api/save/posts/{userId}",
+					"raw": "localhost:8080/api/v1/save/posts/{userId}",
 					"host": [
 						"localhost"
 					],
 					"port": "8080",
 					"path": [
 						"api",
+						"v1",
 						"save",
 						"posts",
 						"{userId}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GetTotLikesNumber",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:8080/api/v1/likes/post/{postId}",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"likes",
+						"post",
+						"{postId}"
 					]
 				}
 			},
@@ -284,13 +316,14 @@
 					}
 				},
 				"url": {
-					"raw": "localhost:8080/api/users/register",
+					"raw": "localhost:8080/api/v1/users/register",
 					"host": [
 						"localhost"
 					],
 					"port": "8080",
 					"path": [
 						"api",
+						"v1",
 						"users",
 						"register"
 					]
@@ -305,7 +338,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"username\": \"john\",\n    \"password\": \"JohnDoe123@\"\n}",
+					"raw": "{\n    \"username\": \"john\",\n    \"password\": \"John123@\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -313,13 +346,14 @@
 					}
 				},
 				"url": {
-					"raw": "localhost:8080/api/users/login",
+					"raw": "localhost:8080/api/v1/users/login",
 					"host": [
 						"localhost"
 					],
 					"port": "8080",
 					"path": [
 						"api",
+						"v1",
 						"users",
 						"login"
 					]
@@ -334,7 +368,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"title\": \"second post test\",\n    \"content\": \"testing the post\"\n}",
+					"raw": "{\n    \"title\": \" post test\",\n    \"content\": \"testing the post\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -342,13 +376,14 @@
 					}
 				},
 				"url": {
-					"raw": "localhost:8080/api/posts/create/{username}",
+					"raw": "localhost:8080/api/v1/posts/create/{username}",
 					"host": [
 						"localhost"
 					],
 					"port": "8080",
 					"path": [
 						"api",
+						"v1",
 						"posts",
 						"create",
 						"{username}"
@@ -372,13 +407,14 @@
 					}
 				},
 				"url": {
-					"raw": "localhost:8080/api/posts/comments/create/{userId}/{postId}",
+					"raw": "localhost:8080/api/v1/posts/comments/create/{userId}/{postId}",
 					"host": [
 						"localhost"
 					],
 					"port": "8080",
 					"path": [
 						"api",
+						"v1",
 						"posts",
 						"comments",
 						"create",
@@ -404,13 +440,14 @@
 					}
 				},
 				"url": {
-					"raw": "localhost:8080/api/save/posts/{userid}",
+					"raw": "localhost:8080/api/v1/save/posts/{userid}",
 					"host": [
 						"localhost"
 					],
 					"port": "8080",
 					"path": [
 						"api",
+						"v1",
 						"save",
 						"posts",
 						"{userid}"
@@ -425,13 +462,14 @@
 				"method": "POST",
 				"header": [],
 				"url": {
-					"raw": "localhost:8080/api/likes/post/{userId}/{postId}",
+					"raw": "localhost:8080/api/v1/likes/post/{userId}/{postId}",
 					"host": [
 						"localhost"
 					],
 					"port": "8080",
 					"path": [
 						"api",
+						"v1",
 						"likes",
 						"post",
 						"{userId}",
@@ -447,14 +485,14 @@
 				"method": "POST",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:8080/api/users/follow/{userId}/follow/{userId}",
-					"protocol": "http",
+					"raw": "localhost:8080/api/v1/users/follow/{userId}/follow/{userId}",
 					"host": [
 						"localhost"
 					],
 					"port": "8080",
 					"path": [
 						"api",
+						"v1",
 						"users",
 						"follow",
 						"{userId}",
@@ -471,14 +509,14 @@
 				"method": "POST",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:8080/api/users/follow/{userId}/follow/{userId}",
-					"protocol": "http",
+					"raw": "localhost:8080/api/v1/users/follow/{userId}/follow/{userId}",
 					"host": [
 						"localhost"
 					],
 					"port": "8080",
 					"path": [
 						"api",
+						"v1",
 						"users",
 						"follow",
 						"{userId}",
@@ -495,13 +533,14 @@
 				"method": "POST",
 				"header": [],
 				"url": {
-					"raw": "localhost:8080/api/likes/comment/{userId}/{commentId}",
+					"raw": "localhost:8080/api/v1/likes/comment/{userId}/{commentId}",
 					"host": [
 						"localhost"
 					],
 					"port": "8080",
 					"path": [
 						"api",
+						"v1",
 						"likes",
 						"comment",
 						"{userId}",
@@ -527,13 +566,14 @@
 					]
 				},
 				"url": {
-					"raw": "localhost:8080/api/images/upload",
+					"raw": "localhost:8080/api/v1/images/upload",
 					"host": [
 						"localhost"
 					],
 					"port": "8080",
 					"path": [
 						"api",
+						"v1",
 						"images",
 						"upload"
 					]
@@ -556,16 +596,47 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:8080/api/update/image/{userId}",
-					"protocol": "http",
+					"raw": "localhost:8080/api/v1/update/image/{userId}",
 					"host": [
 						"localhost"
 					],
 					"port": "8080",
 					"path": [
 						"api",
+						"v1",
 						"update",
 						"image",
+						"{userId}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "SendMessage",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"content\": \"?\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8080/api/v1/message/{userId}/{userId}",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"message",
+						"{userId}",
 						"{userId}"
 					]
 				}
@@ -587,13 +658,14 @@
 					}
 				},
 				"url": {
-					"raw": "localhost:8080/api/users/update/{username}",
+					"raw": "localhost:8080/api/v1/users/update/{username}",
 					"host": [
 						"localhost"
 					],
 					"port": "8080",
 					"path": [
 						"api",
+						"v1",
 						"users",
 						"update",
 						"{username}"
@@ -608,13 +680,14 @@
 				"method": "DELETE",
 				"header": [],
 				"url": {
-					"raw": "localhost:8080/api/save/posts/{userId}/{postId}",
+					"raw": "localhost:8080/api/v1/save/posts/{userId}/{postId}",
 					"host": [
 						"localhost"
 					],
 					"port": "8080",
 					"path": [
 						"api",
+						"v1",
 						"save",
 						"posts",
 						"{userId}",
