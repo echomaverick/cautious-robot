@@ -155,7 +155,7 @@ const PostDetail = () => {
 
     try {
       const response = await axios.post(
-        `${apiUrl}/posts/comments/create/${commenterId}/${id}`,
+        `${apiUrl}/posts/comments/create/${commenterId}/${postId}`,
         {
           content: newComment,
         }

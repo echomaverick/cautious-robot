@@ -2,7 +2,6 @@ import React, { useEffect } from "react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "../styles/not-found.css";
-import loaderImage from "/home/samuel/Documents/GitHub/cautious-robot/socialApp-client/src/assets/mona-loading-dark-7701a7b97370.gif";
 
 const NotFound = () => {
   const navigate = useNavigate();
@@ -19,19 +18,6 @@ const NotFound = () => {
   const handleBackHome = () => {
     navigate("/home");
   };
-
-  if (isLoading) {
-    return (
-      <div className="loader">
-        <img
-          src={loaderImage}
-          alt="Loading..."
-          style={{ width: 30, marginTop: 550 }}
-        />
-        <p className="loader-text">One moment, please...</p>
-      </div>
-    );
-  }
 
   return (
     <div style={{ textAlign: "center" }}>

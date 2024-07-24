@@ -44,50 +44,42 @@ const Profile = () => {
   }, [navigate]);
 
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setIsLoading(false);
-    }, 3000);
-
     fetchData();
-
+    // Use a timeout to simulate loading state
+    const timer = setTimeout(() => setIsLoading(false), 3000);
     return () => clearTimeout(timer);
   }, []);
 
   const fetchData = async () => {
     try {
-      const profileDataCached = getCachedProfileData();
-      if (profileDataCached) {
-        setProfileData(profileDataCached);
-      } else {
-        const username = getUsernameFromToken();
-        if (username) {
-          const profileResponse = await axios.get(
-            `${apiUrl}/users/info/${username}`
-          );
-          if (profileResponse.status === 200) {
-            setProfileData(profileResponse.data);
-            cacheProfileData(profileResponse.data);
-          } else {
-            console.error("Failed to fetch profile data");
-          }
+      const username = getUsernameFromToken();
+      if (username) {
+        const profileResponse = await axios.get(
+          `${apiUrl}/users/info/${username}`
+        );
+        if (profileResponse.status === 200) {
+          setProfileData(profileResponse.data);
         } else {
-          console.error("Token not found in localStorage or invalid");
+          console.error("Failed to fetch profile data");
         }
+      } else {
+        console.error("Token not found in localStorage or invalid");
       }
+
       const userId = getUserIdFromToken();
       if (userId) {
         const followersFollowingResponse = await axios.get(
           `${apiUrl}/users/list/${userId}`
         );
         if (followersFollowingResponse.status === 200) {
-          const { followerId, followingId } = followersFollowingResponse.data;
-          const followersCount = followerId.length;
-          const followingCount = followingId.length;
-          setFollowersCount(followersCount);
-          setFollowingCount(followingCount);
+          const { followerId = [], followingId = [] } =
+            followersFollowingResponse.data;
+          setFollowersCount(followerId.length);
+          setFollowingCount(followingId.length);
         } else {
           console.error("Failed to fetch followers and following counts");
         }
+
         const userPostsResponse = await axios.get(
           `${apiUrl}/posts/list/${userId}`
         );
@@ -103,15 +95,6 @@ const Profile = () => {
       console.error("Error fetching data:", error.message);
       setError("Something went wrong. Please try again later.");
     }
-  };
-
-  const cacheProfileData = (data) => {
-    localStorage.setItem("cachedProfileData", JSON.stringify(data));
-  };
-
-  const getCachedProfileData = () => {
-    const cachedProfileData = localStorage.getItem("cachedProfileData");
-    return cachedProfileData ? JSON.parse(cachedProfileData) : null;
   };
 
   const getUsernameFromToken = () => {
@@ -168,7 +151,9 @@ const Profile = () => {
                   profile={profileData}
                 />
               ) : (
-                <div className="profile-error">{error}</div>
+                <div className="profile-error">
+                  {error || "Profile data could not be loaded"}
+                </div>
               )}
             </Container>
           )}

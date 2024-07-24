@@ -2,7 +2,6 @@ package org.server.socialapp.util;
 
 import io.github.bucket4j.Bandwidth;
 import io.github.bucket4j.Bucket;
-import io.github.bucket4j.Bucket4j;
 import io.github.bucket4j.Refill;
 import jakarta.servlet.*;
 import jakarta.servlet.http.HttpServletResponse;
@@ -39,9 +38,8 @@ public class RateLimitingFilter implements Filter {
 	}
 
 	private Bucket newBucket(String key) {
-		Refill refill = Refill.greedy(20 , Duration.ofMinutes(1));
-		Bandwidth limit = Bandwidth.classic(20 , refill);
-		return Bucket4j.builder().addLimit(limit).build();
+		Refill refill = Refill.intervally(30 , Duration.ofMinutes(1));
+		Bandwidth limit = Bandwidth.classic(30 , refill);
+		return Bucket.builder().addLimit(limit).build();
 	}
-
 }

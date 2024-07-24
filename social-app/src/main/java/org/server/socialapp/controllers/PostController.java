@@ -1,8 +1,12 @@
 package org.server.socialapp.controllers;
 
+import org.server.socialapp.exceptions.InternalServerErrorException;
+import org.server.socialapp.exceptions.NotFoundException;
 import org.server.socialapp.models.Post;
 import org.server.socialapp.services.PostService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -34,5 +38,17 @@ public class PostController {
 	@GetMapping("/{postId}")
 	public Post getPost(@PathVariable String postId) {
 		return postService.getPostById(postId);
+	}
+
+	@DeleteMapping("/{postId}")
+	public ResponseEntity<String> deletePost(@PathVariable String postId) {
+		try {
+			postService.deletePost(postId);
+			return ResponseEntity.ok("Post deleted successfully");
+		} catch (NotFoundException e) {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Post not found");
+		} catch (InternalServerErrorException e) {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Something went wrong");
+		}
 	}
 }

@@ -202,7 +202,6 @@
 @media (max-width: 1024px) {
   .post-card {
     width: 77%;
-    position: fixed;
   }
   .error-message {
     margin-left: 50px;
@@ -231,7 +230,6 @@
     width: 77.5%;
     margin: 10px 70px;
     padding: 15px;
-    position: fixed;
   }
   .error-message {
     margin-left: 50px;

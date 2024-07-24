@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import MessageComponent from "../components/Message";
 import { MdMessage } from "react-icons/md";
+import { IoIosArrowRoundBack } from "react-icons/io";
 import "../styles/user-cards.css";
 
 const UserCard = ({ user }) => {
@@ -46,7 +47,7 @@ const UserCard = ({ user }) => {
 
       try {
         const response = await axios.get(`${apiUrl}/users/list/${userId}`);
-        const followerIds = response.data?.followerId || []; // Ensure it's an array
+        const followerIds = response.data?.followerId || [];
 
         if (followerIds.length > 0) {
           const followersData = await Promise.all(
@@ -95,10 +96,30 @@ const UserCard = ({ user }) => {
     return null;
   };
 
+  const handleBackHome = () => {
+    navigate("/home");
+  };
+
   return (
     <div style={{ display: "flex", position: "relative" }}>
       <div className="user-card">
-        <h4>Followers</h4>
+        <h4>
+          {" "}
+          <IoIosArrowRoundBack
+            className="back-icon1"
+            onClick={handleBackHome}
+            style={{
+              backgroundColor: "lightgrey",
+              borderRadius: "50%",
+              width: 30,
+              height: 30,
+              gap: 20,
+              transition: "background-color 0.3s ease",
+              marginRight: 10,
+            }}
+          />
+          Followers
+        </h4>
         {user?.username && <h3>{user.username}</h3>}
         {user?.email && <p>Email: {user.email}</p>}
         {followers.length > 0 ? (

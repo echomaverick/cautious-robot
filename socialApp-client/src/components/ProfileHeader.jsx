@@ -3,6 +3,7 @@ import axios from "axios";
 import { Col, Row, Image } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import { CiSettings } from "react-icons/ci";
+import { FaRegTrashCan } from "react-icons/fa6";
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import Form from "react-bootstrap/Form";
@@ -65,6 +66,7 @@ const ProfileHeader = ({ followers, following, posts, profile }) => {
     fetchUserPosts();
     setShowPostModal(true);
   };
+
   const handleClosePostModal = () => setShowPostModal(false);
 
   const handleUpdateProfile = async () => {
@@ -88,6 +90,7 @@ const ProfileHeader = ({ followers, following, posts, profile }) => {
       if (response.status === 200) {
         console.log("Profile updated successfully.");
         handleCloseModal();
+        window.location.reload();
       } else {
         console.error("Failed to update profile.");
         setError("Failed to update profile.");
@@ -201,6 +204,21 @@ const ProfileHeader = ({ followers, following, posts, profile }) => {
 
   const handlePostClick = (postId) => {
     navigate(`/posts/${postId}`);
+  };
+
+  const handleDeletePost = async (postId) => {
+    try {
+      const response = await axios.delete(`${apiUrl}/posts/${postId}`);
+      if (response.status === 200) {
+        setUserPosts(userPosts.filter((post) => post.id !== postId));
+      } else {
+        console.error("Failed to delete post.");
+        setError("Failed to delete post.");
+      }
+    } catch (error) {
+      console.error("Error deleting post:", error.message);
+      setError("Error deleting post. Please try again later.");
+    }
   };
 
   if (!profile) {
@@ -332,8 +350,23 @@ const ProfileHeader = ({ followers, following, posts, profile }) => {
             {userPosts.length > 0 ? (
               <ul>
                 {userPosts.map((post) => (
-                  <li key={post.id} onClick={() => handlePostClick(post.id)}>
-                    {post.content}
+                  <li
+                    key={post.id}
+                    style={{ display: "flex", alignItems: "center" }}
+                  >
+                    <span
+                      onClick={() => handlePostClick(post.id)}
+                      style={{ cursor: "pointer" }}
+                    >
+                      {post.content}
+                    </span>
+                    <Button
+                      variant="link"
+                      onClick={() => handleDeletePost(post.id)}
+                      style={{ marginLeft: "auto", color: "red", width: 50 }}
+                    >
+                      <FaRegTrashCan />
+                    </Button>
                   </li>
                 ))}
               </ul>

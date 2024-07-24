@@ -36,14 +36,19 @@ const PremiumPage = () => {
     <div className="premium-page">
       <div className="background">
         <h1 className="-plan-title" style={{ top: 10 }}>
-        <IoIosArrowRoundBack className="back-icon1" onClick={handleBackHome} style={{
-          backgroundColor: "lightgrey",
-          borderRadius: "50%",
-          width: 30,
-          height: 30,
-          gap: 20,
-          transition: "background-color 0.3s ease"
-        }}/>  Choose the best plan for you
+          <IoIosArrowRoundBack
+            className="back-icon1"
+            onClick={handleBackHome}
+            style={{
+              backgroundColor: "lightgrey",
+              borderRadius: "50%",
+              width: 30,
+              height: 30,
+              gap: 20,
+              transition: "background-color 0.3s ease",
+            }}
+          />{" "}
+          Choose the best plan for you
         </h1>
         <div className="container">
           <div className="panel pricing-table">

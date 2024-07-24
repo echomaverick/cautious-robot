@@ -82,4 +82,21 @@ public class PostService {
 			throw new InternalServerErrorException("Error fetching post");
 		}
 	}
+
+	public void deletePost(String postId) {
+		try {
+			if (!postRepository.existsById(postId)) {
+				throw new NotFoundException("Post not found with ID: " + postId);
+			}
+
+			postRepository.deleteById(postId);
+			logger.info("Post with ID {} successfully deleted" , postId);
+		} catch (NotFoundException e) {
+			logger.error("Error deleting post with ID {}: {}" , postId , e.getMessage());
+			throw e;
+		} catch (Exception e) {
+			logger.error("Unexpected error occurred while deleting post with ID {}: {}" , postId , e.getMessage());
+			throw new InternalServerErrorException("Error deleting post");
+		}
+	}
 }

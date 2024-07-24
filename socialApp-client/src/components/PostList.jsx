@@ -4,8 +4,6 @@ import axios from "axios";
 import PostCard from "./PostCard";
 import loaderImage from "/home/samuel/Documents/GitHub/cautious-robot/socialApp-client/src/assets/mona-loading-dark-7701a7b97370.gif";
 
-const CACHE_DURATION = 1800000;
-
 const PostList = () => {
   const [posts, setPosts] = useState([]);
   const [error, setError] = useState(null);
@@ -33,30 +31,10 @@ const PostList = () => {
   useEffect(() => {
     if (!isAuthenticated()) {
       navigate("/login");
-    }
-  }, [navigate]);
-
-  useEffect(() => {
-    const cachedPosts = getCachedPosts();
-    if (cachedPosts) {
-      setPosts(cachedPosts);
-      const lastCacheTime = localStorage.getItem("lastCacheTime");
-      const isCacheValid =
-        lastCacheTime && Date.now() - parseInt(lastCacheTime) < CACHE_DURATION;
-
-      if (!isCacheValid) {
-        fetchPosts();
-      }
     } else {
       fetchPosts();
     }
-
-    const timer = setTimeout(() => {
-      setIsLoading(false);
-    }, 3000);
-
-    return () => clearTimeout(timer);
-  }, []);
+  }, [navigate]);
 
   const fetchPosts = async () => {
     try {
@@ -76,21 +54,12 @@ const PostList = () => {
       const sortedPosts = [...postsWithDates, ...postsWithoutDates];
 
       setPosts(sortedPosts);
-      cachePosts(sortedPosts);
     } catch (error) {
       console.error("Error fetching posts:", error.message);
       setError("Something went wrong. Please try again later.");
+    } finally {
+      setIsLoading(false);
     }
-  };
-
-  const cachePosts = (postsToCache) => {
-    localStorage.setItem("cachedPosts", JSON.stringify(postsToCache));
-    localStorage.setItem("lastCacheTime", Date.now().toString());
-  };
-
-  const getCachedPosts = () => {
-    const cachedPosts = localStorage.getItem("cachedPosts");
-    return cachedPosts ? JSON.parse(cachedPosts) : null;
   };
 
   if (error) {
@@ -103,9 +72,9 @@ const PostList = () => {
 
   if (isLoading) {
     return (
-      <div className="text-lolader">
+      <div className="text-loader">
         <img src={loaderImage} alt="Loading..." style={{ width: 30 }} />
-        <p className="loade-txt">One moment, please...</p>
+        <p className="loader-txt">One moment, please...</p>
       </div>
     );
   }
