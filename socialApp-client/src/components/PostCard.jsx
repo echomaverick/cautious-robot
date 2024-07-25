@@ -40,6 +40,7 @@ const PostCard = ({
   const [saved, setSaved] = useState(false);
   const [likeCount, setLikeCount] = useState(0);
   const [loading, setLoading] = useState(false);
+  const [username, setUsername] = useState("");
 
   const apiUrl = import.meta.env.VITE_API_BASE_URL;
   const navigate = useNavigate();
@@ -72,8 +73,8 @@ const PostCard = ({
       try {
         const response = await axios.get(`${apiUrl}/users/${userId}`);
         if (response.status === 200) {
-          // Set the user data in state if the request is successful.
           setUser(response.data);
+          setUsername(response.data.username);
         }
       } catch (error) {
         console.error("Error fetching user details:", error.message);
@@ -427,8 +428,13 @@ const PostCard = ({
           />
         </div>
         <div className="post-header-text" onClick={navigateToPost}>
-          <h2>{title}</h2>
+          <div className="post-header-text" onClick={navigateToPost}>
+            <h2>{username || "Unknown User"}</h2>
+          </div>
         </div>
+      </div>
+      <div>
+        <p className="post-content">{content}</p>
       </div>
       {imageUrl && (
         <div className="post-image">

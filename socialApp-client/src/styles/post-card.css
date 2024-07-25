@@ -15,6 +15,10 @@
   align-items: center;
   margin-bottom: 10px;
 }
+.post-content {
+  display: flex;
+  margin-left: 5px;
+}
 
 .post-image {
   margin: 10px 0;
