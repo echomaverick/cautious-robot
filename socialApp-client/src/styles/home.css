@@ -11,3 +11,18 @@ div {
 .main-content {
   flex: 1;
 }
+
+.chat-history {
+  position: fixed;
+  height: 100vh;
+  overflow-y: auto;
+  top: 0;
+  left: 0;
+  border-right: 1px solid #ddd;
+}
+
+.main-content {
+  flex: 1;
+  overflow-y: auto;
+  height: 100vh;
+}

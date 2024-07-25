@@ -13,9 +13,23 @@ const UserDetail = () => {
   const [error, setError] = useState(null);
   const [followersCount, setFollowersCount] = useState(0);
   const [followingCount, setFollowingCount] = useState(0);
+  const [isFollowing, setIsFollowing] = useState(false);
   const navigate = useNavigate();
-
   const apiUrl = import.meta.env.VITE_API_BASE_URL;
+
+  const getUserIdFromToken = () => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      try {
+        const decodedToken = JSON.parse(atob(token.split(".")[1]));
+        return decodedToken.userId;
+      } catch (error) {
+        console.error("Error decoding token:", error.message);
+        return null;
+      }
+    }
+    return null;
+  };
 
   const isAuthenticated = () => {
     const token = localStorage.getItem("token");
@@ -41,6 +55,7 @@ const UserDetail = () => {
 
   useEffect(() => {
     fetchUserDetails();
+    checkIfFollowing();
   }, [userId]);
 
   const fetchUserDetails = async () => {
@@ -48,6 +63,7 @@ const UserDetail = () => {
       const response = await axios.get(`${apiUrl}/users/${userId}`);
       if (response.status === 200) {
         setUser(response.data);
+        fetchUserFollowers();
       } else {
         setError("Failed to fetch user details");
       }
@@ -59,17 +75,56 @@ const UserDetail = () => {
 
   const fetchUserFollowers = async () => {
     if (userId) {
-      const followersFollowingResponse = await axios.get(
-        `http://localhost:8080/api/users/list/${userId}`
-      );
-      if (followersFollowingResponse.status === 200) {
-        const { followerId, followingId } = followersFollowingResponse.data;
-        const followersCount = followerId.length;
-        const followingCount = followingId.length;
-        setFollowersCount(followersCount);
-        setFollowingCount(followingCount);
-      } else {
-        console.error("Failed to fetch followers and following counts");
+      try {
+        const response = await axios.get(`${apiUrl}/users/${userId}/followers`);
+        if (response.status === 200) {
+          const followersCount = response.data.length;
+          setFollowersCount(followersCount);
+        } else {
+          console.error("Failed to fetch followers count");
+        }
+      } catch (error) {
+        console.error("Error fetching followers:", error.message);
+      }
+    }
+  };
+
+  const checkIfFollowing = async () => {
+    const loggedInUserId = getUserIdFromToken();
+    if (loggedInUserId && userId) {
+      try {
+        const response = await axios.get(
+          `${apiUrl}/users/${loggedInUserId}/following`
+        );
+        if (response.status === 200) {
+          const isFollowing = response.data.includes(userId);
+          setIsFollowing(isFollowing);
+        } else {
+          console.error("Failed to check following status");
+        }
+      } catch (error) {
+        console.error("Error checking following status:", error.message);
+      }
+    }
+  };
+
+  const handleFollowToggle = async () => {
+    const loggedInUserId = getUserIdFromToken();
+    if (loggedInUserId && userId) {
+      try {
+        const apiEndpoint = isFollowing
+          ? `${apiUrl}/users/${loggedInUserId}/unfollow/${userId}`
+          : `${apiUrl}/users/follow/${loggedInUserId}/follow/${userId}`;
+
+        const response = await axios.post(apiEndpoint);
+        if (response.status === 200) {
+          setIsFollowing(!isFollowing);
+          fetchUserFollowers();
+        } else {
+          console.error("Failed to update follow status");
+        }
+      } catch (error) {
+        console.error("Error updating follow status:", error.message);
       }
     }
   };
@@ -90,14 +145,8 @@ const UserDetail = () => {
     }
 
     const domain = new URL(url).hostname;
-
     const matchedDomain = trustedDomains.find((domain) => url.includes(domain));
-
-    if (matchedDomain) {
-      return matchedDomain;
-    } else {
-      return "Unknown";
-    }
+    return matchedDomain || "Unknown";
   };
 
   if (error) {
@@ -124,7 +173,14 @@ const UserDetail = () => {
           <Col md={7} className="colo">
             <div className="butt-style">
               <span className="usernam-p">{user.username}</span>
-              <Button className="light me-1 butt-edit"> Follow</Button>
+              <Button
+                className={`light me-1 butt-edit ${
+                  isFollowing ? "following" : "follow"
+                }`}
+                onClick={handleFollowToggle}
+              >
+                {isFollowing ? "Following" : "Follow"}
+              </Button>
             </div>
             <br />
             <br />

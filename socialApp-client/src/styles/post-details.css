@@ -66,14 +66,14 @@
     top: 50px;
   }
   .facebook-icon {
-    width: 40px;
+    width: 60px;
   }
   .share-icons {
     display: flex;
     justify-content: space-around;
   }
   .x-icon {
-    width: 56px;
+    width: 34px;
   }
   .reddit-icon {
     width: 57px;

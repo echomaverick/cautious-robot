@@ -6,6 +6,7 @@ import "../styles/post.css";
 const PostForm = () => {
   const [postTitle, setPostTitle] = useState("");
   const [postContent, setPostContent] = useState("");
+  const [selectedFile, setSelectedFile] = useState(null);
   const navigate = useNavigate();
 
   const apiUrl = import.meta.env.VITE_API_BASE_URL;
@@ -40,6 +41,10 @@ const PostForm = () => {
     setPostContent(event.target.value);
   };
 
+  const handleFileChange = (event) => {
+    setSelectedFile(event.target.files[0]);
+  };
+
   const handlePostSubmit = async (event) => {
     event.preventDefault();
 
@@ -51,15 +56,22 @@ const PostForm = () => {
 
     const username = getUsernameFromToken(token);
 
-    const postData = {
-      title: postTitle,
-      content: postContent,
-    };
+    // Prepare form data to include file
+    const formData = new FormData();
+    formData.append("title", postTitle);
+    formData.append("content", postContent);
+    formData.append("file", selectedFile);
 
     try {
       const response = await axios.post(
         `${apiUrl}/posts/create/${username}`,
-        postData
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+            Authorization: `Bearer ${token}`,
+          },
+        }
       );
 
       if (response.status === 200) {
@@ -70,6 +82,7 @@ const PostForm = () => {
 
       setPostTitle("");
       setPostContent("");
+      setSelectedFile(null); // Clear file input after submission
     } catch (error) {
       console.error("Error creating post:", error.message);
     }
@@ -106,6 +119,7 @@ const PostForm = () => {
           rows={4}
           required
         />
+        <input type="file" onChange={handleFileChange} />
         <button type="submit">Post</button>
       </form>
     </div>

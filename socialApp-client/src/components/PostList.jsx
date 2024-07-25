@@ -91,7 +91,7 @@ const PostList = () => {
   }
 
   return (
-    <div className="post-list">
+    <div className="post-list" style={{marginBottom: 15}}>
       {posts.map((post) => (
         <PostCard
           key={post.id}
@@ -102,6 +102,7 @@ const PostList = () => {
           postDate={post.postDate}
           postTime={post.postTime}
           userId={post.userId}
+          imageUrl={post.imageUrl}
         />
       ))}
     </div>

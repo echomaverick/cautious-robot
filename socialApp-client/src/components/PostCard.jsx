@@ -16,7 +16,15 @@ import xIcon from "/home/samuel/Documents/GitHub/cautious-robot/socialApp-client
 import facebookIcon from "/home/samuel/Documents/GitHub/cautious-robot/socialApp-client/src/assets/faceboook.png";
 import "../styles/post-card.css";
 
-const PostCard = ({ id, title, content, postDate, postTime, userId }) => {
+const PostCard = ({
+  id,
+  title,
+  content,
+  postDate,
+  postTime,
+  userId,
+  imageUrl,
+}) => {
   const [expanded, setExpanded] = useState(false);
   const [showNewCommentForm, setShowNewCommentForm] = useState(false);
   const [newComment, setNewComment] = useState("");
@@ -252,14 +260,14 @@ const PostCard = ({ id, title, content, postDate, postTime, userId }) => {
       console.error("User not authenticated or token invalid.");
       return;
     }
-  
+
     if (newComment.trim() === "") {
       console.error("Empty comment cannot be posted.");
       return;
     }
-  
+
     setLoading(true); // Start loader
-  
+
     try {
       const response = await axios.post(
         `${apiUrl}/posts/comments/create/${commenterId}/${id}`,
@@ -276,7 +284,6 @@ const PostCard = ({ id, title, content, postDate, postTime, userId }) => {
       setLoading(false); // Stop loader
     }
   };
-  
 
   // Handles toggling the like status of the post.
   const toggleLike = async (e) => {
@@ -292,7 +299,7 @@ const PostCard = ({ id, title, content, postDate, postTime, userId }) => {
         await axios.post(`${apiUrl}/likes/post/${userIdFromToken}/${id}`);
         setLiked(true);
       }
-      const likeResponse = await axios.get(`${apiUrl}/likes/post/${postId}`);
+      const likeResponse = await axios.get(`${apiUrl}/likes/post/${id}`);
       if (likeResponse.status === 200) {
         setLikeCount(likeResponse.data);
       }
@@ -397,13 +404,12 @@ const PostCard = ({ id, title, content, postDate, postTime, userId }) => {
     if (!postTime) {
       return "N/A"; // Return a default value if postTime is undefined or null
     }
-    
+
     const [timeString] = postTime.split(".");
     const [hours, minutes] = timeString.split(":");
-    
+
     return `${hours}:${minutes}`;
   };
-  
 
   // Checks if the given date is valid by attempting to parse it.
   const isValidDate = (date) => {
@@ -424,12 +430,18 @@ const PostCard = ({ id, title, content, postDate, postTime, userId }) => {
           <h2>{title}</h2>
         </div>
       </div>
+      {imageUrl && (
+        <div className="post-image">
+          <img src={imageUrl} alt="Post Image" className="image" />
+        </div>
+      )}
       <div className="post-footer">
         <div className="footer-icons">
           <div className="icon-wrapper" onClick={toggleComments}>
             <AiOutlineComment className="icon" />
             <p className="comment-num">{commentCount}</p>
           </div>
+
           <div>
             {liked ? (
               <IoMdHeart className="icon liked" onClick={toggleLike} />
@@ -562,6 +574,7 @@ PostCard.propTypes = {
   postDate: PropTypes.string.isRequired,
   postTime: PropTypes.string.isRequired,
   userId: PropTypes.string.isRequired,
+  imageUrl: PropTypes.string,
 };
 
 export default PostCard;

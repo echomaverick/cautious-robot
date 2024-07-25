@@ -53,40 +53,40 @@ const PremiumPage = () => {
         <div className="container">
           <div className="panel pricing-table">
             <div className="pricing-plan">
-              <img
-                src="https://s28.postimg.cc/ju5bnc3x9/plane.png"
-                alt=""
-                className="pricing-img"
-              />
-              <h2 className="pricing-header">Pro</h2>
+              <h2 className="pricing-header">Premium</h2>
               <ul className="pricing-features">
-                <li className="pricing-features-item">Never sleeps</li>
                 <li className="pricing-features-item">
-                  Multiple workers for more powerful apps
+                  Half Ads in For You and Following
                 </li>
+                <li className="pricing-features-item">Larger reply boost</li>
+                <li className="pricing-features-item">Get paid to post</li>
+                <li className="pricing-features-item">Checkmark</li>
+                <li className="pricing-features-item">
+                  Chirps Pro, Analytics, Media Studio
+                </li>
+                <li className="pricing-features-item">Creator Subscription</li>
               </ul>
-              <span className="pricing-price">$150</span>
-              <a href="#/" className="pricing-button is-featured">
-                Free trial
+              <span className="pricing-price">$7</span>
+              <a href="/pay" className="pricing-button is-featured">
+                Subscribe & Pay
               </a>
             </div>
 
             <div className="pricing-plan">
-              <img
-                src="https://s21.postimg.cc/tpm0cge4n/space-ship.png"
-                alt=""
-                className="pricing-img"
-              />
-              <h2 className="pricing-header">Enterprise</h2>
+              <h2 className="pricing-header">Premium +</h2>
               <ul className="pricing-features">
-                <li className="pricing-features-item">Dedicated</li>
                 <li className="pricing-features-item">
-                  Simple horizontal scalability
+                  Evrithing in Premium, and
                 </li>
+                <li className="pricing-features-item">
+                  No Ads in For You and Following
+                </li>
+                <li className="pricing-features-item">Largest reply boost</li>
+                <li className="pricing-features-item">Write articles</li>
               </ul>
-              <span className="pricing-price">$400</span>
-              <a href="#/" className="pricing-button">
-                Free trial
+              <span className="pricing-price">$14</span>
+              <a href="/pay" className="pricing-button">
+                Subscribe & Pay
               </a>
             </div>
           </div>

@@ -97,6 +97,7 @@
   font-weight: 600;
   letter-spacing: 1px;
   margin: 50px 0 25px;
+  list-style: none;
 }
 
 .pricing-features-item {
@@ -104,6 +105,18 @@
   font-size: 12px;
   line-height: 1.5;
   padding: 15px 0;
+  position: relative;
+  padding-left: 30px;
+}
+
+.pricing-features-item::before {
+  content: "\2713";
+  color: #016ff9;
+  font-size: 16px;
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
 }
 
 .pricing-features-item:last-child {
@@ -115,6 +128,16 @@
   display: block;
   font-size: 32px;
   font-weight: 700;
+  position: relative;
+}
+
+.pricing-price::after {
+  content: "/month";
+  font-size: 14px;
+  color: #888;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
 }
 
 .pricing-button {
@@ -146,7 +169,7 @@
   color: black;
   z-index: 100;
   position: relative;
-  font-size: 13px;
+  font-size: 25px;
 }
 
 .back-button {
@@ -184,6 +207,6 @@
     color: black;
     z-index: 100;
     position: relative;
-    font-size: 13px;
+    font-size: 25px;
   }
 }

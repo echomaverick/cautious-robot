@@ -21,6 +21,7 @@ public class Post {
 	private List<String> likes = new ArrayList<>();
 	private String postDate;
 	private String postTime;
+	private String imageUrl;
 
 	public Post(String title , String content) {
 		this.id = UUID.randomUUID().toString();
@@ -92,5 +93,11 @@ public class Post {
 
 	public void setLikes(List<String> likes) {
 		this.likes = likes;
+	}
+	public void setImageUrl(String imageUrl) {
+		this.imageUrl = imageUrl;
+	}
+	public String getImageUrl() {
+		return imageUrl;
 	}
 }

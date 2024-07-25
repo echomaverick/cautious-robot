@@ -32,8 +32,10 @@ const Home = () => {
 
   return (
     <div className="home-container">
-      <div className="main-content">
+      <div className="chat-history">
         <ChatHistory />
+      </div>
+      <div className="main-content">
         <Post />
         <PostList />
       </div>
