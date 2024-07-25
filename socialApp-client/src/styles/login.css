@@ -7,6 +7,13 @@
   height: 100vh;
 }
 
+.spinner-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
 .form-container {
   width: 50%;
   padding: 16px;
