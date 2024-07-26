@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Spinner } from "react-bootstrap";
 import image from "../assets/logo.png";
@@ -7,38 +7,9 @@ import "../styles/login.css";
 const LoginScript = () => {
   const navigate = useNavigate();
   const [error, setError] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
 
   const apiUrl = import.meta.env.VITE_API_BASE_URL;
-
-  useEffect(() => {
-    const checkTokenExpiration = () => {
-      const token = localStorage.getItem("token");
-      if (token) {
-        try {
-          const decodedToken = JSON.parse(atob(token.split(".")[1]));
-          const expirationTime = decodedToken.exp * 1000;
-
-          if (Date.now() > expirationTime) {
-            localStorage.removeItem("token");
-            console.log("Token expired, user logged out");
-            setLoading(false);
-          } else {
-            setTimeout(() => {
-              navigate("/home");
-            }, 2000);
-          }
-        } catch (error) {
-          console.error("Error decoding token:", error.message);
-          setLoading(false);
-        }
-      } else {
-        setLoading(false);
-      }
-    };
-
-    checkTokenExpiration();
-  }, [navigate]);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -61,7 +32,7 @@ const LoginScript = () => {
         localStorage.setItem("token", token);
         setTimeout(() => {
           navigate("/home");
-        }, 3000); // Navigate after 3 seconds
+        }, 1000);
       } else {
         const errorMessage = await response.text();
         setError(errorMessage);

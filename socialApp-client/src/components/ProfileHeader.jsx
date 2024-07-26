@@ -4,6 +4,16 @@ import { Col, Row, Image } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import { CiSettings } from "react-icons/ci";
 import { FaRegTrashCan } from "react-icons/fa6";
+import {
+  FaGithub,
+  FaInstagram,
+  FaTwitter,
+  FaYoutube,
+  FaLinkedin,
+  FaFacebook,
+  FaReddit,
+  FaLink,
+} from "react-icons/fa";
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import Form from "react-bootstrap/Form";
@@ -19,6 +29,8 @@ const ProfileHeader = ({ followers, following, posts, profile }) => {
   const [linksInput, setLinksInput] = useState([]);
   const [userPosts, setUserPosts] = useState([]);
   const [error, setError] = useState(null);
+  const [showSettingsModal, setShowSettingsModal] = useState(false);
+  const [isEditingLinks, setIsEditingLinks] = useState(false);
   const navigate = useNavigate();
 
   const apiUrl = import.meta.env.VITE_API_BASE_URL;
@@ -57,6 +69,7 @@ const ProfileHeader = ({ followers, following, posts, profile }) => {
     setBioInput(profile.bio);
     setTitleInput(profile.title);
     setLinksInput(profile.links);
+    setIsEditingLinks(false);
     setShowModal(true);
   };
 
@@ -65,6 +78,15 @@ const ProfileHeader = ({ followers, following, posts, profile }) => {
   const handleShowPostModal = () => {
     fetchUserPosts();
     setShowPostModal(true);
+  };
+
+  const handleEditLinks = () => {
+    setIsEditingLinks(true);
+  };
+
+  const handleSaveLinks = () => {
+    setIsEditingLinks(false);
+    handleUpdateProfile();
   };
 
   const handleClosePostModal = () => setShowPostModal(false);
@@ -103,30 +125,24 @@ const ProfileHeader = ({ followers, following, posts, profile }) => {
 
   const { username, title, bio, links } = profile;
 
-  const getServiceName = (url) => {
-    const trustedDomains = [
-      "github.com",
-      "instagram.com",
-      "twitter.com",
-      "youtube.com",
-      "linkedin.com",
-      "facebook.com",
-      "reddit.com",
-    ];
+  const getServiceIcon = (url) => {
+    const trustedDomains = {
+      "github.com": <FaGithub />,
+      "instagram.com": <FaInstagram />,
+      "twitter.com": <FaTwitter />,
+      "youtube.com": <FaYoutube />,
+      "linkedin.com": <FaLinkedin />,
+      "facebook.com": <FaFacebook />,
+      "reddit.com": <FaReddit />,
+    };
 
-    if (!url.startsWith("https://")) {
-      return "Not allowed";
+    if (url.startsWith("https://")) {
+      const domain = new URL(url).hostname;
+      return trustedDomains[domain] || <FaLink />;
+      s;
     }
 
-    const domain = new URL(url).hostname;
-
-    const matchedDomain = trustedDomains.find((domain) => url.includes(domain));
-
-    if (matchedDomain) {
-      return matchedDomain;
-    } else {
-      return "Unknown";
-    }
+    return <FaLink />;
   };
 
   const handleFollowersClick = () => {
@@ -188,6 +204,11 @@ const ProfileHeader = ({ followers, following, posts, profile }) => {
     setLinksInput(linksArray);
   };
 
+  const handleLinkDelete = (index) => {
+    const updatedLinks = linksInput.filter((_, i) => i !== index);
+    setLinksInput(updatedLinks);
+  };
+
   const getUserIdFromToken = () => {
     const token = localStorage.getItem("token");
     if (token) {
@@ -221,6 +242,21 @@ const ProfileHeader = ({ followers, following, posts, profile }) => {
     }
   };
 
+  const handleShowSettingsModal = () => setShowSettingsModal(true);
+  const handleCloseSettingsModal = () => setShowSettingsModal(false);
+
+  const getProfileUrl = () => {
+    const username = getUsernameFromToken();
+    return username ? `http://localhost:5173/${username}` : "";
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    setTimeout(() => {
+      navigate("/login");
+    }, 2000);
+  };
+
   if (!profile) {
     return <div style={{ marginTop: 150 }}>Loading profile...</div>;
   }
@@ -251,7 +287,10 @@ const ProfileHeader = ({ followers, following, posts, profile }) => {
           >
             Posts
           </Button>
-          <Button variant="light me-2 button-settings">
+          <Button
+            variant="light me-2 button-settings"
+            onClick={handleShowSettingsModal}
+          >
             <CiSettings />
           </Button>
         </div>
@@ -282,7 +321,7 @@ const ProfileHeader = ({ followers, following, posts, profile }) => {
           <p style={{ fontWeight: "bold" }} className="user-title">
             {title}
           </p>
-          <p style={{ margin: 0 }} className="user-bio">
+          <p style={{ margin: 0, marginBottom: 10 }} className="user-bio">
             {bio}
           </p>
           <div className="user-links">
@@ -292,9 +331,13 @@ const ProfileHeader = ({ followers, following, posts, profile }) => {
                 href={link}
                 target="_blank"
                 rel="noopener noreferrer"
-                style={{ marginRight: "10px" }}
+                style={{
+                  marginRight: "10px",
+                  display: "flex",
+                  alignItems: "center",
+                }}
               >
-                {getServiceName(link)}
+                {getServiceIcon(link)}
               </a>
             ))}
           </div>
@@ -323,23 +366,63 @@ const ProfileHeader = ({ followers, following, posts, profile }) => {
               />
             </Form.Group>
             <Form.Group controlId="formLinks">
-              <Form.Label>Links (comma separated)</Form.Label>
-              <Form.Control
-                as="textarea"
-                rows={3}
-                name="links"
-                value={linksInput.join(", ")}
-                onChange={handleLinksChange}
-              />
+              <Form.Label>Links</Form.Label>
+              {isEditingLinks ? (
+                <Form.Control
+                  as="textarea"
+                  rows={3}
+                  name="links"
+                  value={linksInput.join(", ")}
+                  onChange={handleLinksChange}
+                />
+              ) : (
+                <div>
+                  {links.map((link, index) => (
+                    <div key={index} style={{ marginBottom: "10px" }}>
+                      <a
+                        href={link}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        style={{
+                          marginRight: "10px",
+                          display: "flex",
+                          alignItems: "center",
+                        }}
+                      >
+                        {getServiceIcon(link)}
+                        {new URL(link).hostname}
+                      </a>
+                    </div>
+                  ))}
+                  <Button variant="link" onClick={handleEditLinks}>
+                    Edit Links
+                  </Button>
+                </div>
+              )}
             </Form.Group>
           </Modal.Body>
+
           <Modal.Footer>
             <Button variant="secondary" onClick={handleCloseModal}>
               Cancel
             </Button>
-            <Button variant="danger" onClick={handleUpdateProfile}>
-              Update
-            </Button>
+            {isEditingLinks ? (
+              <>
+                <Button variant="secondary" onClick={handleSaveLinks}>
+                  Save Links
+                </Button>
+                <Button
+                  variant="danger"
+                  onClick={() => setIsEditingLinks(false)}
+                >
+                  Cancel Editing
+                </Button>
+              </>
+            ) : (
+              <Button variant="danger" onClick={handleUpdateProfile}>
+                Update
+              </Button>
+            )}
           </Modal.Footer>
         </Modal>
         <Modal show={showPostModal} onHide={handleClosePostModal}>
@@ -376,6 +459,38 @@ const ProfileHeader = ({ followers, following, posts, profile }) => {
           </Modal.Body>
           <Modal.Footer>
             <Button variant="secondary" onClick={handleClosePostModal}>
+              Close
+            </Button>
+          </Modal.Footer>
+        </Modal>
+        <Modal show={showSettingsModal} onHide={handleCloseSettingsModal}>
+          <Modal.Header closeButton>
+            <Modal.Title>Settings</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            <Button variant="link" onClick={() => navigate("/settings")}>
+              Settings
+            </Button>
+            <Button variant="link" onClick={() => navigate("/privacy")}>
+              Privacy
+            </Button>
+            <Button variant="link" onClick={() => navigate("/notifications")}>
+              Notifications
+            </Button>
+            <div className="mt-3">
+              <a
+                href={`/qrcode/${getUsernameFromToken()}`}
+                style={{ color: "#007bff" }}
+              >
+                View QR Code
+              </a>
+            </div>
+            <Button variant="link" onClick={handleLogout}>
+              Logout
+            </Button>
+          </Modal.Body>
+          <Modal.Footer>
+            <Button variant="secondary" onClick={handleCloseSettingsModal}>
               Close
             </Button>
           </Modal.Footer>

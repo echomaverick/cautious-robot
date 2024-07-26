@@ -64,6 +64,7 @@ const UserDetail = () => {
       if (response.status === 200) {
         setUser(response.data);
         fetchUserFollowers();
+        fetchUserFollowing();
       } else {
         setError("Failed to fetch user details");
       }
@@ -85,6 +86,22 @@ const UserDetail = () => {
         }
       } catch (error) {
         console.error("Error fetching followers:", error.message);
+      }
+    }
+  };
+
+  const fetchUserFollowing = async () => {
+    if (userId) {
+      try {
+        const response = await axios.get(`${apiUrl}/users/${userId}/following`);
+        if (response.status === 200) {
+          const followingCount = response.data.length;
+          setFollowingCount(followingCount);
+        } else {
+          console.error("Failed to fetch following count");
+        }
+      } catch (error) {
+        console.error("Error fetching following:", error.message);
       }
     }
   };

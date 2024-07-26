@@ -15,6 +15,7 @@ import NotFound from "./components/NotFound";
 import SavedPosts from "./components/SavedPosts";
 import PremiumPage from "./components/PremiumPage";
 import UserCard from "./components/MessageUserCard";
+import QRCodePage from "./components/QrCode";
 
 const App = () => {
   const isAuthenticated = () => {
@@ -76,6 +77,16 @@ const App = () => {
             element={
               isAuthenticated() ? (
                 <UserCard />
+              ) : (
+                <Navigate to="/login" replace />
+              )
+            }
+          />
+          <Route
+            path="/qrcode/:username"
+            element={
+              isAuthenticated() ? (
+                <QRCodePage />
               ) : (
                 <Navigate to="/login" replace />
               )

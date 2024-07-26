@@ -11,6 +11,11 @@
   display: flex;
   margin-right: 20px;
 }
+.user-links a {
+  color: black; 
+  font-size: 24px; 
+}
+
 .user-title {
   display: flex;
 }
