@@ -30,9 +30,9 @@ const LoginScript = () => {
       if (response.ok) {
         const token = await response.text();
         localStorage.setItem("token", token);
-        setTimeout(() => {
-          navigate("/home");
-        }, 1000);
+        console.log("Token stored and navigating to home");
+        setLoading(false);
+        navigate("/home");
       } else {
         const errorMessage = await response.text();
         setError(errorMessage);
