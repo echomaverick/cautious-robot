@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Spinner } from "react-bootstrap";
 import image from "../assets/logo.png";
@@ -13,11 +13,14 @@ const LoginScript = () => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+  
+    if (loading) return;
+  
     setLoading(true);
-
+  
     const username = event.target.username.value;
     const password = event.target.password.value;
-
+  
     try {
       const response = await fetch(`${apiUrl}/users/login`, {
         method: "POST",
@@ -26,24 +29,28 @@ const LoginScript = () => {
         },
         body: JSON.stringify({ username, password }),
       });
-
+  
       if (response.ok) {
         const token = await response.text();
         localStorage.setItem("token", token);
         console.log("Token stored and navigating to home");
-        setLoading(false);
         navigate("/home");
       } else {
         const errorMessage = await response.text();
         setError(errorMessage);
-        setLoading(false);
       }
     } catch (error) {
       console.error("Error:", error.message);
       setError("An unexpected error occurred. Please try again later.");
+    } finally {
       setLoading(false);
     }
   };
+  
+  useEffect(() => {
+    console.log("LoginScript component mounted or updated");
+  }, []);
+  
 
   return (
     <form id="loginForm" onSubmit={handleSubmit}>
